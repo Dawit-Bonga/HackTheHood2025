@@ -6,6 +6,7 @@ function RoadmapForm({ setRoadmap, setLoading }) {
   const [interests, setInterests] = useState('');
   const [activities, setActivities] = useState('');
   const [demographic, setDemographic] = useState('');
+  const [testing, setTesting] = useState('');
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -13,7 +14,7 @@ function RoadmapForm({ setRoadmap, setLoading }) {
     const res = await fetch(`${import.meta.env.VITE_BACKEND}/generate`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ gpa, grade, interests, activities, demographic })
+      body: JSON.stringify({ gpa, grade, interests, activities, demographic, testing })
     });
     const data = await res.json();
     setRoadmap(data.roadmap);
@@ -87,6 +88,17 @@ function RoadmapForm({ setRoadmap, setLoading }) {
           value={demographic}
           onChange={(e) => setDemographic(e.target.value)}
           placeholder="e.g., first-generation college student, low-income, rural area, underrepresented minority"
+        />
+      </div>
+
+        <div className="form-group">
+        <label className="form-label" htmlFor="testing">Sat/Testing:</label>
+        <textarea
+          className="form-textarea"
+          id="testing"
+          value={testing}
+          onChange={(e) => setTesting(e.target.value)}
+          placeholder="e.g., 1330 SAT, haven't taken the SAT yet, plan on taking it soon aiming for ..."
         />
       </div>
 

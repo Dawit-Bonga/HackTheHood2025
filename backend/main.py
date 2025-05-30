@@ -29,6 +29,7 @@ async def generate_roadmap(request: Request):
     interests = data.get("interests")
     activities = data.get("activities")
     demographic = data.get("demographics")
+    testing = data.get("testing")
     
     example_timeline = """
 **May–August**
@@ -82,6 +83,7 @@ async def generate_roadmap(request: Request):
     "You should write month-by-month and grade-by-grade advice that is practical, empathetic, and tailored to their personal background. "
     "Give academic goals, extracurricular tips, and summer suggestions that are aligned with their stated interests and clubs. "
     "Reference their current activities directly and suggest specific scholarships, programs, or competitions that match their situation. "
+    f"also take this information about their testing into account: {testing}"
 
     f"Use this timeline format as an example of what the structure should look like:\n\n{example_timeline}\n\n"
     
