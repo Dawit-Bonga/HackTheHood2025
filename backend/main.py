@@ -75,17 +75,20 @@ async def generate_roadmap(request: Request):
     
     
     prompt = (
-        f"Create a personalized 4-year college preparation roadmap for a high school student.\n\n"
-        f"Grade: {grade}\n"
-        f"GPA: {gpa}\n"
-        f"Interests: {interests}\n"
-        f"Extracurriculars: {activities}\n\n"
-        f"Break it down by year and include academic goals, extracurricular suggestions, summer activities, and milestones."
-        f"Write your version using {example_timeline} as an example and take the student's context into it so you can make it personalized"
-        f"Try to incorperate this student's demographics {demographic} into this while you look for opportuntiies but also don't make it overly focused on that"
-        "make sure you give an indepth list and not just a couple bullet points per year"
-        
-        )
+    f"You are a college admissions mentor writing a personalized roadmap for a high school student. "
+    f"The student is {grade} grade, has a {gpa} GPA, is interested in {interests}, and participates in {activities}. "
+    f"They are from a {demographic} background (e.g., first-generation, low-income, underrepresented). "
+
+    "You should write month-by-month and grade-by-grade advice that is practical, empathetic, and tailored to their personal background. "
+    "Give academic goals, extracurricular tips, and summer suggestions that are aligned with their stated interests and clubs. "
+    "Reference their current activities directly and suggest specific scholarships, programs, or competitions that match their situation. "
+
+    f"Use this timeline format as an example of what the structure should look like:\n\n{example_timeline}\n\n"
+    
+    "DO NOT give generic advice like 'join clubs' — personalize it based on what they've already done. "
+    "Be warm, helpful, and encouraging in tone, while still being strategic. Make it feel like it was written just for them."
+)
+
         
         
     try:
