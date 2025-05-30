@@ -278,15 +278,18 @@
   }
   
   .main-content {
-    padding: 2rem 1rem 1rem 1rem;
+    padding: 1rem 0.5rem;
     gap: 1rem;
   }
   
   .roadmap-form,
   .roadmap-display {
-    padding: 1.5rem;
+    padding: 1rem;
     margin: 0;
     border-radius: 12px;
+    width: calc(100% - 1rem);
+    max-width: none;
+    box-sizing: border-box;
   }
   
   .roadmap-display h2 {
@@ -298,6 +301,7 @@
     padding: 1rem;
     font-size: 0.8rem;
     line-height: 1.5;
+    overflow-x: auto;
   }
   
   .form-input,
@@ -305,6 +309,8 @@
   .form-textarea,
   .form-button {
     font-size: 16px; /* Prevents zoom on iOS */
+    width: 100%;
+    box-sizing: border-box;
   }
   
   .form-button {
@@ -327,13 +333,16 @@
   }
   
   .main-content {
-    padding: 1.5rem 0.75rem 0.75rem 0.75rem;
+    padding: 1rem 0.25rem;
   }
   
   .roadmap-form,
   .roadmap-display {
-    padding: 1rem;
+    padding: 0.75rem;
     border-radius: 8px;
+    width: calc(100% - 0.5rem);
+    max-width: none;
+    margin: 0 auto;
   }
   
   .roadmap-display h2 {
@@ -343,6 +352,7 @@
   .roadmap-display pre {
     padding: 0.75rem;
     font-size: 0.75rem;
+    overflow-x: auto;
   }
   
   .form-label {
@@ -353,9 +363,13 @@
   .form-select,
   .form-textarea {
     padding: 0.75rem;
+    width: 100%;
+    box-sizing: border-box;
   }
   
   .form-button {
     padding: 0.75rem 1.25rem;
+    width: 100%;
+    box-sizing: border-box;
   }
 }
