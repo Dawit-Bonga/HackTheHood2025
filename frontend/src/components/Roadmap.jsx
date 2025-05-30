@@ -1,0 +1,105 @@
+import React, { useState } from 'react';
+import RoadmapDisplay from './Display';
+
+function RoadmapPage() {
+  const [roadmap, setRoadmap] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [gpa, setGpa] = useState('');
+  const [grade, setGrade] = useState('');
+  const [interests, setInterests] = useState('');
+  const [activities, setActivities] = useState('');
+  const [demographic, setDemographic] = useState('');
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    const res = await fetch('http://localhost:8000/generate', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ gpa, grade, interests, activities, demographic })
+    });
+    const data = await res.json();
+    setRoadmap(data.roadmap);
+    setLoading(false);
+  };
+
+  return (
+    <main className="main-content">
+      <form className="roadmap-form" onSubmit={handleSubmit}>
+        <div className="form-group">
+          <label className="form-label" htmlFor='grade'>Grade Level:</label>
+          <select
+            className="form-select"
+            id='grade'
+            value={grade}
+            onChange={(e) => setGrade(e.target.value)}
+            required
+          >
+            <option value="">--Select a Grade--</option>
+            <option value="9">9th</option>
+            <option value="10">10th</option>
+            <option value="11">11th</option>
+            <option value="12">12th</option>
+          </select>
+        </div>
+
+        <div className="form-group">
+          <label className="form-label" htmlFor="gpa">GPA:</label>
+          <input
+            className="form-input"
+            type="number"
+            id="gpa"
+            value={gpa}
+            onChange={(e) => setGpa(e.target.value)}
+            step="0.01"
+            min="0"
+            max="4"
+            placeholder="e.g., 3.5"
+            required
+          />
+        </div>
+
+        <div className="form-group">
+          <label className="form-label" htmlFor="interests">Interests / Goals:</label>
+          <textarea
+            className="form-textarea"
+            id="interests"
+            value={interests}
+            onChange={(e) => setInterests(e.target.value)}
+            placeholder="e.g., computer science, medicine, social justice"
+            required
+          />
+        </div>
+
+        <div className="form-group">
+          <label className="form-label" htmlFor="activities">Activities/Extracurriculars:</label>
+          <textarea
+            className="form-textarea"
+            id="activities"
+            value={activities}
+            onChange={(e) => setActivities(e.target.value)}
+            placeholder="e.g., debate, HackClub, Research, please try to be specific"
+            required
+          />
+        </div>
+
+        <div className="form-group">
+          <label className="form-label" htmlFor="demographic">Demographic Information:</label>
+          <textarea
+            className="form-textarea"
+            id="demographic"
+            value={demographic}
+            onChange={(e) => setDemographic(e.target.value)}
+            placeholder="e.g., first-generation college student, low-income, rural area, underrepresented minority"
+          />
+        </div>
+
+        <button className="form-button" type="submit">Generate Roadmap</button>
+      </form>
+      
+      <RoadmapDisplay roadmap={roadmap} loading={loading} />
+    </main>
+  );
+}
+
+export default RoadmapPage;
