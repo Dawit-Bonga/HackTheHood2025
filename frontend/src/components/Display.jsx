@@ -1,5 +1,5 @@
 function RoadmapDisplay({ roadmap, loading }) {
-  if (loading) return <p className="loading-text">⏳ Generating your personalized roadmap...</p>;
+  if (loading) return <p className="loading-text">⏳ Generating your personalized roadmap... This could take a while so give it up to a couple minutes</p>;
   if (!roadmap) return null;
 
   return (
