@@ -10,7 +10,7 @@ function RoadmapForm({ setRoadmap, setLoading }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    const res = await fetch('http://localhost:8000/generate', {
+    const res = await fetch(`${import.meta.env.VITE_BACKEND}/generate`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ gpa, grade, interests, activities, demographic })
