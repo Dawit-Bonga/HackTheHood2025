@@ -98,7 +98,8 @@ function RoadmapForm({ setRoadmap, setLoading }) {
           id="testing"
           value={testing}
           onChange={(e) => setTesting(e.target.value)}
-          placeholder="e.g., 1330 SAT, haven't taken the SAT yet, plan on taking it soon aiming for ..."
+          placeholder="e.g., 1330 SAT, haven't taken the SAT yet, plan on taking it soon aiming for...
+          Please specify the score so if it SAT say {score} SAT, etc."
         />
       </div>
 
