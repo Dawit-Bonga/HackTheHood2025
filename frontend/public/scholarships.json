@@ -1,0 +1,142 @@
+[
+  {
+    "name": "The Gates Scholarship",
+    "description": "A highly selective, full scholarship for exceptional, Pell-eligible, minority, high school seniors.",
+    "link": "https://www.thegatesscholarship.org/",
+    "eligibility": [
+      "low-income",
+      "first-gen",
+      "underrepresented",
+      "high school senior"
+    ],
+    "application_open":"2025-07-15",
+    "deadline": "2025-09-15",
+    "amount": "Full Cost of Attendance"
+  },
+  {
+    "name": "Jack Kent Cooke Foundation College Scholarship",
+    "description": "Provides scholarships to high-achieving high school seniors with financial need.",
+    "link": "https://www.jkcf.org/our-scholarships/",
+    "eligibility": [
+      "low-income",
+      "high-achieving",
+      "first-gen"
+    ],
+    "application_open":"2025-08-22",
+    "deadline": "2025-11-14",
+    "amount": "Up to $55,000 per year"
+  },
+  {
+    "name": "Amazon Future Engineer Scholarship",
+    "description": "For students pursuing a computer science degree with financial need.",
+    "link": "https://www.amazonfutureengineer.com/scholarships",
+    "eligibility": [
+      "low-income",
+      "CS",
+      "STEM",
+      "high school senior"
+    ],
+    "application_open":"2025-11-01",
+    "deadline": "2025-12-15",
+    "amount": "$40,000 + internship"
+  },
+  {
+    "name": "Dell Scholars Program",
+    "description": "Supports low-income, highly motivated students in achieving a college degree.",
+    "link": "https://www.dellscholars.org/",
+    "eligibility": [
+      "low-income",
+      "first-gen",
+      "high school senior"
+    ],
+    "deadline": "2025-12-01",
+    "application_open":"2025-10-01",
+    "amount": "$20,000 + support resources"
+  },
+  {
+    "name": " LinkedIn Possibilities in Tech",
+    "description": "Supports underrepresented highly motivated students in achieving a college degree pursuing a degree in Computer Science(and adjacent fields)",
+    "link": "Link will be added when it comes out",
+    "eligibility": [
+      "low-income",
+      "first-gen",
+      "high school senior",
+      "underrepresented"
+    ],
+    "deadline": "2025-12-15",
+    "application_open":"2025-10-01",
+    "amount": "$40,000 + career support and help"
+  },
+  {
+    "name": "Coca Cola Scholarship",
+    "description": "Supports highly motivated students in their pursuit of college",
+    "link": "Link will be added when it comes out",
+    "eligibility": [
+      "U.S. Citizen or legal resident",
+      "high school senior"
+    ],
+    "deadline": "2025-10-31",
+    "application_open":"2025-08-01",
+    "amount": "$20,000"
+  },
+  {
+    "name": "Ron Brown Scholarship",
+    "description": "A prestigious scholarship honoring the legacy of Ronald H. Brown, supporting academically talented and service-minded African American high school seniors with financial need. The program emphasizes leadership, community engagement, and public service.",
+    "link": "https://ronbrown.org/ron-brown-scholarship/",
+    "eligibility": [
+      "U.S. Citizen or legal resident",
+      "high school senior",
+      "Black/African American",
+      "low-income"
+    ],
+    "deadline": "2025-12-01",
+    "application_open":"2025-09-01",
+    "amount": "$40,000 ($10,000 per year for 4 years)"
+  },
+  {
+    "name": "Jackie Robinson",
+    "description": "The Jackie Robinson Foundation Scholarship awards up to $35,000 over four years to outstanding minority high school seniors who demonstrate academic excellence, leadership, and financial need",
+    "link": "https://jackierobinson.org/scholarship/",
+    "eligibility": [
+      "U.S. Citizen or legal resident",
+      "high school senior",
+      "low-income",
+      "test-score"
+    ],
+    "deadline": "2026-01-09",
+    "application_open":"2025-09-01",
+    "amount": "$35,000"
+  },
+{
+  "name": "Hagan Scholarship",
+  "description": "The Hagan Scholarship is a nationwide need-based merit scholarship that provides up to $48,000 over four years to high-achieving, low-income high school seniors from rural areas to attend college and graduate debt-free.",
+  "link": "https://haganscholarships.org/",
+  "eligibility": [
+    "U.S. Citizen",
+    "high school senior",
+    "low-income",
+    "minimum 3.5 GPA",
+    "minimum 23 ACT or 1200 SAT",
+    "must work 240 hours in the 12 months prior to fall college enrollment",
+    "must attend an eligible public high school"
+  ],
+  "deadline": "2025-12-01",
+  "application_open": "2025-09-01",
+  "amount": "$48,000 over 4 years + study abroad and graduate school funding"
+},
+{
+  "name": "Cameron Impact Scholarship",
+  "description": "The Cameron Impact Scholarship is a four-year, full-tuition, merit-based scholarship awarded to high school seniors who have demonstrated excellence in academics, leadership, extracurricular activities, and community service.",
+  "link": "https://www.bryancameroneducationfoundation.org/applicants/",
+  "eligibility": [
+    "U.S. Citizen",
+    "high school senior",
+    "minimum unweighted GPA of 3.7",
+    "demonstrated leadership and community service",
+    "planning to attend a full-time U.S. college or university"
+  ],
+  "deadline": "2025-09-06",
+  "application_open": "2025-05-01",
+  "amount": "Full tuition and fees for 4 years"
+}
+]
