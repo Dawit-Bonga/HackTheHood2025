@@ -164,7 +164,7 @@ async def generate_roadmap(request: Request):
         
     try:
         response = client.chat.completions.create(
-            model="gpt-4",
+            model="gpt-4.1-mini",
             messages=[{"role": "user", "content": prompt}],
             temperature=0.7,
             # max_tokens=2300
