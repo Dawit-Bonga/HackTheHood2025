@@ -1,0 +1,1468 @@
+diff --git a/frontend/package-lock.json b/frontend/package-lock.json
+index 92ef55a..29b926f 100644
+--- a/frontend/package-lock.json
++++ b/frontend/package-lock.json
+@@ -8,6 +8,7 @@
+       "name": "roadmapgen",
+       "version": "0.0.0",
+       "dependencies": {
++        "lucide-react": "^0.511.0",
+         "react": "^19.1.0",
+         "react-dom": "^19.1.0",
+         "react-router-dom": "^7.6.1"
+@@ -17,10 +18,13 @@
+         "@types/react": "^19.1.2",
+         "@types/react-dom": "^19.1.2",
+         "@vitejs/plugin-react": "^4.4.1",
++        "autoprefixer": "^10.4.21",
+         "eslint": "^9.25.0",
+         "eslint-plugin-react-hooks": "^5.2.0",
+         "eslint-plugin-react-refresh": "^0.4.19",
+         "globals": "^16.0.0",
++        "postcss": "^8.5.4",
++        "tailwindcss": "^4.1.8",
+         "vite": "^6.3.5"
+       }
+     },
+@@ -1468,6 +1472,44 @@
+       "dev": true,
+       "license": "Python-2.0"
+     },
++    "node_modules/autoprefixer": {
++      "version": "10.4.21",
++      "resolved": "https://registry.npmjs.org/autoprefixer/-/autoprefixer-10.4.21.tgz",
++      "integrity": "sha512-O+A6LWV5LDHSJD3LjHYoNi4VLsj/Whi7k6zG12xTYaU4cQ8oxQGckXNX8cRHK5yOZ/ppVHe0ZBXGzSV9jXdVbQ==",
++      "dev": true,
++      "funding": [
++        {
++          "type": "opencollective",
++          "url": "https://opencollective.com/postcss/"
++        },
++        {
++          "type": "tidelift",
++          "url": "https://tidelift.com/funding/github/npm/autoprefixer"
++        },
++        {
++          "type": "github",
++          "url": "https://github.com/sponsors/ai"
++        }
++      ],
++      "license": "MIT",
++      "dependencies": {
++        "browserslist": "^4.24.4",
++        "caniuse-lite": "^1.0.30001702",
++        "fraction.js": "^4.3.7",
++        "normalize-range": "^0.1.2",
++        "picocolors": "^1.1.1",
++        "postcss-value-parser": "^4.2.0"
++      },
++      "bin": {
++        "autoprefixer": "bin/autoprefixer"
++      },
++      "engines": {
++        "node": "^10 || ^12 || >=14"
++      },
++      "peerDependencies": {
++        "postcss": "^8.1.0"
++      }
++    },
+     "node_modules/balanced-match": {
+       "version": "1.0.2",
+       "resolved": "https://registry.npmjs.org/balanced-match/-/balanced-match-1.0.2.tgz",
+@@ -1993,6 +2035,20 @@
+       "dev": true,
+       "license": "ISC"
+     },
++    "node_modules/fraction.js": {
++      "version": "4.3.7",
++      "resolved": "https://registry.npmjs.org/fraction.js/-/fraction.js-4.3.7.tgz",
++      "integrity": "sha512-ZsDfxO51wGAXREY55a7la9LScWpwv9RxIrYABrlvOFBlH/ShPnrtsXeuUIfXKKOVicNxQ+o8JTbJvjS4M89yew==",
++      "dev": true,
++      "license": "MIT",
++      "engines": {
++        "node": "*"
++      },
++      "funding": {
++        "type": "patreon",
++        "url": "https://github.com/sponsors/rawify"
++      }
++    },
+     "node_modules/fsevents": {
+       "version": "2.3.3",
+       "resolved": "https://registry.npmjs.org/fsevents/-/fsevents-2.3.3.tgz",
+@@ -2245,6 +2301,15 @@
+         "yallist": "^3.0.2"
+       }
+     },
++    "node_modules/lucide-react": {
++      "version": "0.511.0",
++      "resolved": "https://registry.npmjs.org/lucide-react/-/lucide-react-0.511.0.tgz",
++      "integrity": "sha512-VK5a2ydJ7xm8GvBeKLS9mu1pVK6ucef9780JVUjw6bAjJL/QXnd4Y0p7SPeOUMC27YhzNCZvm5d/QX0Tp3rc0w==",
++      "license": "ISC",
++      "peerDependencies": {
++        "react": "^16.5.1 || ^17.0.0 || ^18.0.0 || ^19.0.0"
++      }
++    },
+     "node_modules/minimatch": {
+       "version": "3.1.2",
+       "resolved": "https://registry.npmjs.org/minimatch/-/minimatch-3.1.2.tgz",
+@@ -2298,6 +2363,16 @@
+       "dev": true,
+       "license": "MIT"
+     },
++    "node_modules/normalize-range": {
++      "version": "0.1.2",
++      "resolved": "https://registry.npmjs.org/normalize-range/-/normalize-range-0.1.2.tgz",
++      "integrity": "sha512-bdok/XvKII3nUpklnV6P2hxtMNrCboOjAcyBuQnWEhO665FwrSNRxU+AqpsyvO6LgGYPspN+lu5CLtw4jPRKNA==",
++      "dev": true,
++      "license": "MIT",
++      "engines": {
++        "node": ">=0.10.0"
++      }
++    },
+     "node_modules/optionator": {
+       "version": "0.9.4",
+       "resolved": "https://registry.npmjs.org/optionator/-/optionator-0.9.4.tgz",
+@@ -2430,6 +2505,13 @@
+         "node": "^10 || ^12 || >=14"
+       }
+     },
++    "node_modules/postcss-value-parser": {
++      "version": "4.2.0",
++      "resolved": "https://registry.npmjs.org/postcss-value-parser/-/postcss-value-parser-4.2.0.tgz",
++      "integrity": "sha512-1NNCs6uurfkVbeXG4S8JFT9t19m45ICnif8zWLd5oPSZ50QnwMfK+H3jv408d4jw/7Bttv5axS5IiHoLaVNHeQ==",
++      "dev": true,
++      "license": "MIT"
++    },
+     "node_modules/prelude-ls": {
+       "version": "1.2.1",
+       "resolved": "https://registry.npmjs.org/prelude-ls/-/prelude-ls-1.2.1.tgz",
+@@ -2650,6 +2732,13 @@
+         "node": ">=8"
+       }
+     },
++    "node_modules/tailwindcss": {
++      "version": "4.1.8",
++      "resolved": "https://registry.npmjs.org/tailwindcss/-/tailwindcss-4.1.8.tgz",
++      "integrity": "sha512-kjeW8gjdxasbmFKpVGrGd5T4i40mV5J2Rasw48QARfYeQ8YS9x02ON9SFWax3Qf616rt4Cp3nVNIj6Hd1mP3og==",
++      "dev": true,
++      "license": "MIT"
++    },
+     "node_modules/tinyglobby": {
+       "version": "0.2.14",
+       "resolved": "https://registry.npmjs.org/tinyglobby/-/tinyglobby-0.2.14.tgz",
+diff --git a/frontend/package.json b/frontend/package.json
+index 57597e2..33d4a25 100644
+--- a/frontend/package.json
++++ b/frontend/package.json
+@@ -10,6 +10,7 @@
+     "preview": "vite preview"
+   },
+   "dependencies": {
++    "lucide-react": "^0.511.0",
+     "react": "^19.1.0",
+     "react-dom": "^19.1.0",
+     "react-router-dom": "^7.6.1"
+@@ -19,10 +20,13 @@
+     "@types/react": "^19.1.2",
+     "@types/react-dom": "^19.1.2",
+     "@vitejs/plugin-react": "^4.4.1",
++    "autoprefixer": "^10.4.21",
+     "eslint": "^9.25.0",
+     "eslint-plugin-react-hooks": "^5.2.0",
+     "eslint-plugin-react-refresh": "^0.4.19",
+     "globals": "^16.0.0",
++    "postcss": "^8.5.4",
++    "tailwindcss": "^4.1.8",
+     "vite": "^6.3.5"
+   }
+ }
+diff --git a/frontend/src/App.css b/frontend/src/App.css
+index dadbbb3..fc1afed 100644
+--- a/frontend/src/App.css
++++ b/frontend/src/App.css
+@@ -1,94 +1,54 @@
++/* Base app container */
+ .app-container {
+   min-height: 100vh;
+-  display: flex;
+-  flex-direction: column;
+   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
++  @apply flex flex-col;
+ }
+ 
+ /* Navbar Styling */
+ .navbar {
+-  display: flex;
+-  justify-content: space-between;
+-  align-items: center;
+-  padding: 0.75rem 2rem;
+-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.98) 0%, rgba(255, 255, 255, 0.95) 100%);
++  @apply flex justify-between items-center px-8 py-4;
++  background: rgba(255, 255, 255, 0.98);
+   backdrop-filter: blur(20px);
+   border-bottom: 1px solid rgba(102, 126, 234, 0.15);
+   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+-  position: static;
+-  z-index: 1000;
+ }
+ 
+ .navbar-brand {
+-  text-align: left;
++  @apply text-left;
+ }
+ 
+ .navbar-brand h1 {
+-  margin: 0;
+-  color: #2d3748;
+-  font-size: 1.5rem;
+-  font-weight: 700;
++  @apply m-0 text-2xl font-bold;
+   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+   -webkit-background-clip: text;
+   -webkit-text-fill-color: transparent;
+   background-clip: text;
+-  letter-spacing: -0.025em;
+ }
+ 
+ .navbar-brand p {
+-  margin: 0;
+-  color: #718096;
+-  font-size: 0.8rem;
+-  font-weight: 500;
+-  letter-spacing: 0.01em;
++  @apply m-0 text-gray-600 text-sm font-medium tracking-tight;
+ }
+ 
+ .navbar-links {
+-  display: flex;
+-  gap: 2rem;
++  @apply flex gap-8;
+ }
+ 
+ .nav-link {
+-  text-decoration: none;
+-  color: #333;
+-  font-weight: 600;
+-  padding: 0.5rem 1rem;
+-  border-radius: 6px;
+-  transition: all 0.4s cubic-bezier(0.25, 0.1, 0.25, 1);
+-  position: relative;
+-  overflow: hidden;
+-}
+-
+-.nav-link::before {
+-  content: '';
+-  position: absolute;
+-  top: 0;
+-  left: -100%;
+-  width: 100%;
+-  height: 100%;
+-  background: linear-gradient(90deg, transparent, rgba(102, 126, 234, 0.1), transparent);
+-  transition: left 0.5s ease;
+-}
+-
+-.nav-link:hover::before {
+-  left: 100%;
++  @apply text-gray-700 font-semibold px-4 py-2 rounded-xl transition-all duration-300;
++  background: linear-gradient(to right, rgba(102, 126, 234, 0.1) 50%, transparent 50%);
++  background-size: 200% 100%;
++  background-position: right bottom;
+ }
+ 
+ .nav-link:hover {
+-  background: rgba(102, 126, 234, 0.1);
+-  color: #667eea;
+-  transform: translateY(-1px);
+-  box-shadow: 0 4px 8px rgba(102, 126, 234, 0.2);
++  background-position: left bottom;
++  @apply text-indigo-600 transform -translate-y-0.5 shadow-lg;
+ }
+ 
+ .main-content {
+-  flex: 1;
+-  margin: 0;
+-  padding: 3rem 2rem 2rem 2rem;
+-  width: 100%;
+-  display: flex;
+-  flex-direction: column;
+-  gap: 2rem;
++  @apply flex-1 m-0 py-12 px-6 w-full flex flex-col items-center gap-8;
++  background: linear-gradient(180deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.1) 100%);
+ }
+ 
+ /* Form Styling */
+@@ -218,7 +178,7 @@
+ @keyframes fadeInUp {
+   from {
+     opacity: 0;
+-    transform: translateY(30px);
++    transform: translateY(20px);
+   }
+   to {
+     opacity: 1;
+@@ -229,23 +189,32 @@
+ @keyframes pulse {
+   0%, 100% {
+     opacity: 1;
++    transform: scale(1);
+   }
+   50% {
+-    opacity: 0.7;
++    opacity: 0.8;
++    transform: scale(0.98);
+   }
+ }
+ 
+-@keyframes slideInContent {
+-  from {
+-    opacity: 0;
+-    transform: translateY(20px);
++@keyframes shimmer {
++  0% {
++    background-position: -1000px 0;
+   }
+-  to {
+-    opacity: 1;
+-    transform: translateY(0);
++  100% {
++    background-position: 1000px 0;
+   }
+ }
+ 
++/* Animations */
++.animate-fadeIn {
++  animation: fadeInUp 0.6s ease-out;
++}
++
++.animate-pulse {
++  animation: pulse 2s ease-in-out infinite;
++}
++
+ /* Roadmap animation classes */
+ .roadmap-fadeIn {
+   animation: fadeInUp 0.8s ease-out;
+@@ -255,121 +224,54 @@
+   animation: slideInContent 1s ease-out 0.3s both;
+ }
+ 
++/* Responsive styles */
+ @media (max-width: 768px) {
+   .navbar {
+-    flex-direction: column;
+-    gap: 0.5rem;
+-    padding: 0.75rem;
+-    text-align: center;
++    @apply px-4 py-3 flex-col items-center;
+   }
+-  
+-  .navbar-brand {
+-    text-align: center;
++
++  .navbar-brand h1 {
++    @apply text-xl text-center;
+   }
+-  
++
+   .navbar-links {
+-    gap: 1rem;
+-    flex-wrap: wrap;
+-    justify-content: center;
++    @apply mt-2 gap-4;
+   }
+-  
+-  .navbar-brand h1 {
+-    font-size: 1.2rem;
+-  }
+-  
++
+   .main-content {
+-    padding: 1rem 0.5rem;
+-    gap: 1rem;
+-  }
+-  
+-  .roadmap-form,
+-  .roadmap-display {
+-    padding: 1rem;
+-    margin: 0;
+-    border-radius: 12px;
+-    width: calc(100% - 1rem);
+-    max-width: none;
+-    box-sizing: border-box;
+-  }
+-  
+-  .roadmap-display h2 {
+-    font-size: 1.3rem;
+-    margin-bottom: 1rem;
+-  }
+-  
+-  .roadmap-display pre {
+-    padding: 1rem;
+-    font-size: 0.8rem;
+-    line-height: 1.5;
+-    overflow-x: auto;
+-  }
+-  
+-  .form-input,
+-  .form-select,
+-  .form-textarea,
+-  .form-button {
+-    font-size: 16px; /* Prevents zoom on iOS */
+-    width: 100%;
+-    box-sizing: border-box;
+-  }
+-  
+-  .form-button {
+-    padding: 0.875rem 1.5rem;
+-    font-size: 1rem;
++    @apply py-8 px-4;
+   }
+ }
+ 
+ @media (max-width: 480px) {
+   .navbar {
+-    padding: 0.5rem;
++    @apply px-3 py-2;
+   }
+-  
++
+   .navbar-brand h1 {
+-    font-size: 1.1rem;
++    @apply text-lg;
+   }
+-  
+-  .navbar-brand p {
+-    font-size: 0.75rem;
+-  }
+-  
++
+   .main-content {
+-    padding: 1rem 0.25rem;
+-  }
+-  
+-  .roadmap-form,
+-  .roadmap-display {
+-    padding: 0.75rem;
+-    border-radius: 8px;
+-    width: calc(100% - 0.5rem);
+-    max-width: none;
+-    margin: 0 auto;
++    @apply py-6 px-3;
+   }
+-  
+-  .roadmap-display h2 {
+-    font-size: 1.2rem;
+-  }
+-  
+-  .roadmap-display pre {
+-    padding: 0.75rem;
+-    font-size: 0.75rem;
+-    overflow-x: auto;
++}
++
++/* Print styles */
++@media print {
++  .app-container {
++    background: white !important;
+   }
+-  
+-  .form-label {
+-    font-size: 0.9rem;
++
++  .navbar {
++    display: none !important;
+   }
+-  
+-  .form-input,
+-  .form-select,
+-  .form-textarea {
+-    padding: 0.75rem;
+-    width: 100%;
+-    box-sizing: border-box;
++
++  .main-content {
++    padding: 0 !important;
+   }
+-  
+-  .form-button {
+-    padding: 0.75rem 1.25rem;
+-    width: 100%;
+-    box-sizing: border-box;
++
++  button {
++    display: none !important;
+   }
+ }
+diff --git a/frontend/src/App.jsx b/frontend/src/App.jsx
+index 54367e6..e56511d 100644
+--- a/frontend/src/App.jsx
++++ b/frontend/src/App.jsx
+@@ -5,6 +5,7 @@ import Home from './components/Home';
+ import About from './components/About';
+ import Roadmap from './components/Roadmap';
+ import Scholarship from './components/Scholarship';
++import ScholarshipList from './components/ScholarshipList';
+ import './App.css';
+ 
+ function App() {
+@@ -17,7 +18,7 @@ function App() {
+           <Route path="/" element={<Home />} />
+           <Route path="/about" element={<About />} />
+           <Route path="/roadmap" element={<Roadmap />} />
+-          <Route path="/scholarship" element={<Scholarship />} />
++          <Route path="/scholarship" element={<Scholarship/>} />
+         </Routes>
+       </div>
+     </Router>
+diff --git a/frontend/src/components/Display.jsx b/frontend/src/components/Display.jsx
+index 70909fe..4ff3752 100644
+--- a/frontend/src/components/Display.jsx
++++ b/frontend/src/components/Display.jsx
+@@ -1,13 +1,65 @@
+ function RoadmapDisplay({ roadmap, loading }) {
+-  if (loading) return <p className="loading-text">⏳ Generating your personalized roadmap... This could take a while so give it up to a couple minutes</p>;
++  if (loading) return (
++    <div className="w-full max-w-4xl mx-auto p-8 flex flex-col items-center justify-center">
++      <div className="relative w-20 h-20">
++        <div className="absolute inset-0 rounded-full border-[3px] border-indigo-600 opacity-20"></div>
++        <div className="absolute inset-0 rounded-full border-[3px] border-indigo-600 border-t-transparent animate-spin"></div>
++      </div>
++      <p className="mt-8 text-center text-white text-lg font-medium animate-pulse">
++        ⚡ Generating your personalized roadmap...
++        <span className="block text-sm text-white/80 mt-2">
++          This could take a couple minutes
++        </span>
++      </p>
++    </div>
++  );
++
+   if (!roadmap) return null;
+ 
+   return (
+-    <div className="roadmap-display roadmap-fadeIn">
+-      <h2>Your Custom Roadmap:</h2>
+-      <pre className="roadmap-content">{roadmap}</pre>
++    <div className="w-full max-w-4xl mx-auto animate-fadeIn">
++      <div className="bg-white/95 backdrop-blur-xl rounded-2xl shadow-2xl p-8 md:p-10">
++        <div className="flex items-center space-x-4 mb-8 pb-6 border-b border-gray-100">
++          <div className="h-10 w-1.5 rounded-full bg-gradient-to-b from-indigo-600 to-purple-600"></div>
++          <div>
++            <h2 className="text-2xl font-bold text-gray-800">
++              Your Personalized Roadmap
++            </h2>
++            <p className="text-gray-600 text-sm mt-1">
++              A custom plan tailored to your academic journey
++            </p>
++          </div>
++        </div>
++
++        <div className="prose prose-indigo max-w-none">
++          <pre className="relative p-6 bg-gray-50 rounded-xl border border-gray-200 font-mono text-[15px] leading-relaxed text-gray-800 whitespace-pre-wrap break-words overflow-auto max-h-[600px] shadow-sm">
++            {roadmap}
++          </pre>
++        </div>
++
++        <div className="mt-8 pt-6 border-t border-gray-100 flex justify-end gap-4">
++          <button
++            onClick={() => navigator.clipboard.writeText(roadmap)}
++            className="inline-flex items-center px-4 py-2 text-sm font-medium text-indigo-600 hover:text-indigo-700 transition-colors duration-200"
++          >
++            <svg className="w-5 h-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
++              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" />
++            </svg>
++            Copy to clipboard
++          </button>
++          <button
++            onClick={() => window.print()}
++            className="inline-flex items-center px-6 py-2 bg-gradient-to-r from-indigo-600 to-purple-600 text-white text-sm font-medium rounded-lg shadow-md hover:shadow-lg transform hover:-translate-y-0.5 transition-all duration-200"
++          >
++            <svg className="w-5 h-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
++              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
++            </svg>
++            Print roadmap
++          </button>
++        </div>
++      </div>
+     </div>
+   );
+ }
+ 
+-export default RoadmapDisplay
+\ No newline at end of file
++export default RoadmapDisplay;
+\ No newline at end of file
+diff --git a/frontend/src/components/RoadmapForm.jsx b/frontend/src/components/RoadmapForm.jsx
+index 14f661d..1a1eaac 100644
+--- a/frontend/src/components/RoadmapForm.jsx
++++ b/frontend/src/components/RoadmapForm.jsx
+@@ -7,103 +7,306 @@ function RoadmapForm({ setRoadmap, setLoading }) {
+   const [activities, setActivities] = useState('');
+   const [demographic, setDemographic] = useState('');
+   const [testing, setTesting] = useState('');
++  const [activeSection, setActiveSection] = useState(0);
++
++  const formSections = [
++    {
++      title: "Basic Information",
++      description: "Let's start with your academic basics",
++      fields: ["grade", "gpa"],
++      icon: (
++        <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
++          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
++        </svg>
++      )
++    },
++    {
++      title: "Interests & Activities",
++      description: "Tell us about your passions and involvements",
++      fields: ["interests", "activities"],
++      icon: (
++        <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
++          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
++        </svg>
++      )
++    },
++    {
++      title: "Additional Details",
++      description: "Help us understand your background better",
++      fields: ["demographic", "testing"],
++      icon: (
++        <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
++          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
++        </svg>
++      )
++    }
++  ];
+ 
+   const handleSubmit = async (e) => {
+     e.preventDefault();
+     setLoading(true);
+-    const res = await fetch(`${import.meta.env.VITE_BACKEND}/generate`, {
+-      method: 'POST',
+-      headers: { 'Content-Type': 'application/json' },
+-      body: JSON.stringify({ gpa, grade, interests, activities, demographic, testing })
+-    });
+-    const data = await res.json();
+-    setRoadmap(data.roadmap);
+-    setLoading(false);
++    try {
++      const res = await fetch(`${import.meta.env.VITE_BACKEND}/generate`, {
++        method: 'POST',
++        headers: { 'Content-Type': 'application/json' },
++        body: JSON.stringify({ gpa, grade, interests, activities, demographic, testing })
++      });
++      const data = await res.json();
++      setRoadmap(data.roadmap);
++    } catch (error) {
++      console.error('Error generating roadmap:', error);
++    } finally {
++      setLoading(false);
++    }
+   };
+ 
+-  return (
+-    <form className="roadmap-form" onSubmit={handleSubmit}>
+-      <div className="form-group">
+-        <label className="form-label" htmlFor='grade'>Grade Level:</label>
+-        <select
+-          className="form-select"
+-          id='grade'
+-          value={grade}
+-          onChange={(e) => setGrade(e.target.value)}
+-          required
+-        >
+-          <option value="">--Select a Grade--</option>
+-          <option value="9">9th</option>
+-          <option value="10">10th</option>
+-          <option value="11">11th</option>
+-          <option value="12">12th</option>
+-        </select>
+-      </div>
++  const renderFormSection = (section) => {
++    return (
++      <div className="space-y-8 animate-fadeIn">
++        <div className="flex items-center space-x-4 mb-8">
++          <div className="flex-shrink-0 w-12 h-12 flex items-center justify-center rounded-full bg-gradient-to-br from-indigo-600 to-purple-600 text-white shadow-lg">
++            {section.icon}
++          </div>
++          <div>
++            <h2 className="text-2xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
++              {section.title}
++            </h2>
++            <p className="text-gray-600 text-sm mt-1">{section.description}</p>
++          </div>
++        </div>
++        
++        <div className="space-y-6">
++          {section.fields.includes('grade') && (
++            <div className="form-group transform hover:scale-[1.01] transition-all duration-300">
++              <label className="block text-sm font-semibold text-gray-700 mb-2" htmlFor="grade">
++                Grade Level
++              </label>
++              <div className="relative">
++                <select
++                  id="grade"
++                  value={grade}
++                  onChange={(e) => setGrade(e.target.value)}
++                  required
++                  className="w-full px-5 py-4 rounded-xl border-2 border-gray-200 focus:border-transparent focus:ring-4 focus:ring-indigo-600/20 transition-all duration-300 bg-white shadow-sm appearance-none text-gray-700 pr-10"
++                >
++                  <option value="">Select your grade</option>
++                  <option value="9">9th Grade - Freshman</option>
++                  <option value="10">10th Grade - Sophomore</option>
++                  <option value="11">11th Grade - Junior</option>
++                  <option value="12">12th Grade - Senior</option>
++                </select>
++                <div className="absolute right-4 top-1/2 transform -translate-y-1/2 pointer-events-none">
++                  <svg className="w-5 h-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
++                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
++                  </svg>
++                </div>
++              </div>
++            </div>
++          )}
+ 
+-      <div className="form-group">
+-        <label className="form-label" htmlFor="gpa">GPA:</label>
+-        <input
+-          className="form-input"
+-          type="number"
+-          id="gpa"
+-          value={gpa}
+-          onChange={(e) => setGpa(e.target.value)}
+-          step="0.01"
+-          min="0"
+-          max="4"
+-          placeholder="e.g., 3.5"
+-          required
+-        />
+-      </div>
++          {section.fields.includes('gpa') && (
++            <div className="form-group transform hover:scale-[1.01] transition-all duration-300">
++              <label className="block text-sm font-semibold text-gray-700 mb-2" htmlFor="gpa">
++                Current GPA
++              </label>
++              <div className="relative">
++                <input
++                  type="number"
++                  id="gpa"
++                  value={gpa}
++                  onChange={(e) => setGpa(e.target.value)}
++                  step="0.01"
++                  min="0"
++                  max="4"
++                  placeholder="Enter your GPA"
++                  required
++                  className="w-full px-5 py-4 rounded-xl border-2 border-gray-200 focus:border-transparent focus:ring-4 focus:ring-indigo-600/20 transition-all duration-300 bg-white shadow-sm text-gray-700"
++                />
++                <div className="absolute right-4 top-1/2 transform -translate-y-1/2">
++                  <span className="text-gray-400 text-sm font-medium">/ 4.0</span>
++                </div>
++              </div>
++            </div>
++          )}
+ 
+-      <div className="form-group">
+-        <label className="form-label" htmlFor="interests">Interests / Goals:</label>
+-        <textarea
+-          className="form-textarea"
+-          id="interests"
+-          value={interests}
+-          onChange={(e) => setInterests(e.target.value)}
+-          placeholder="e.g., computer science, medicine, social justice"
+-          required
+-        />
+-      </div>
++          {section.fields.includes('interests') && (
++            <div className="form-group transform hover:scale-[1.01] transition-all duration-300">
++              <label className="block text-sm font-semibold text-gray-700 mb-2" htmlFor="interests">
++                Academic Interests & Career Goals
++              </label>
++              <div className="relative">
++                <div className="absolute inset-0 bg-gradient-to-r from-indigo-600/5 to-purple-600/5 rounded-xl pointer-events-none"></div>
++                <textarea
++                  id="interests"
++                  value={interests}
++                  onChange={(e) => setInterests(e.target.value)}
++                  placeholder="What fields are you passionate about? What do you see yourself doing in the future? Be specific about your interests and goals."
++                  required
++                  className="w-full px-5 py-4 rounded-xl border-2 border-gray-200 focus:border-transparent focus:ring-4 focus:ring-indigo-600/20 transition-all duration-300 bg-white/80 shadow-sm min-h-[150px] text-gray-700 resize-none"
++                />
++              </div>
++            </div>
++          )}
+ 
+-      <div className="form-group">
+-        <label className="form-label" htmlFor="activities">Activities/Extracurriculars:</label>
+-        <textarea
+-          className="form-textarea"
+-          id="activities"
+-          value={activities}
+-          onChange={(e) => setActivities(e.target.value)}
+-          placeholder="e.g., debate, HackClub, Research, please try to be specific"
+-          required
+-        />
+-      </div>
++          {section.fields.includes('activities') && (
++            <div className="form-group transform hover:scale-[1.01] transition-all duration-300">
++              <label className="block text-sm font-semibold text-gray-700 mb-2" htmlFor="activities">
++                Extracurricular Activities & Achievements
++              </label>
++              <div className="relative">
++                <div className="absolute inset-0 bg-gradient-to-r from-indigo-600/5 to-purple-600/5 rounded-xl pointer-events-none"></div>
++                <textarea
++                  id="activities"
++                  value={activities}
++                  onChange={(e) => setActivities(e.target.value)}
++                  placeholder="List your activities, leadership roles, and notable achievements. Include details about your involvement and impact."
++                  required
++                  className="w-full px-5 py-4 rounded-xl border-2 border-gray-200 focus:border-transparent focus:ring-4 focus:ring-indigo-600/20 transition-all duration-300 bg-white/80 shadow-sm min-h-[150px] text-gray-700 resize-none"
++                />
++              </div>
++            </div>
++          )}
+ 
+-      <div className="form-group">
+-        <label className="form-label" htmlFor="demographic">Demographic Information:</label>
+-        <textarea
+-          className="form-textarea"
+-          id="demographic"
+-          value={demographic}
+-          onChange={(e) => setDemographic(e.target.value)}
+-          placeholder="e.g., first-generation college student, low-income, rural area, underrepresented minority"
+-        />
+-      </div>
++          {section.fields.includes('demographic') && (
++            <div className="form-group transform hover:scale-[1.01] transition-all duration-300">
++              <label className="block text-sm font-semibold text-gray-700 mb-2" htmlFor="demographic">
++                Background Information
++                <span className="ml-2 text-xs font-medium text-indigo-600 bg-indigo-50 px-2 py-1 rounded-full">Optional</span>
++              </label>
++              <div className="relative">
++                <div className="absolute inset-0 bg-gradient-to-r from-indigo-600/5 to-purple-600/5 rounded-xl pointer-events-none"></div>
++                <textarea
++                  id="demographic"
++                  value={demographic}
++                  onChange={(e) => setDemographic(e.target.value)}
++                  placeholder="Share relevant details about your background that may impact your educational journey (e.g., first-generation student, geographic location, special circumstances)."
++                  className="w-full px-5 py-4 rounded-xl border-2 border-gray-200 focus:border-transparent focus:ring-4 focus:ring-indigo-600/20 transition-all duration-300 bg-white/80 shadow-sm min-h-[150px] text-gray-700 resize-none"
++                />
++              </div>
++            </div>
++          )}
+ 
+-        <div className="form-group">
+-        <label className="form-label" htmlFor="testing">Sat/Testing:</label>
+-        <textarea
+-          className="form-textarea"
+-          id="testing"
+-          value={testing}
+-          onChange={(e) => setTesting(e.target.value)}
+-          placeholder="e.g., 1330 SAT, haven't taken the SAT yet, plan on taking it soon aiming for...
+-Please specify the score so if your score is SAT say {score} SAT, etc."
+-        />
++          {section.fields.includes('testing') && (
++            <div className="form-group transform hover:scale-[1.01] transition-all duration-300">
++              <label className="block text-sm font-semibold text-gray-700 mb-2" htmlFor="testing">
++                Standardized Test Scores
++                <span className="ml-2 text-xs font-medium text-indigo-600 bg-indigo-50 px-2 py-1 rounded-full">Optional</span>
++              </label>
++              <div className="relative">
++                <div className="absolute inset-0 bg-gradient-to-r from-indigo-600/5 to-purple-600/5 rounded-xl pointer-events-none"></div>
++                <textarea
++                  id="testing"
++                  value={testing}
++                  onChange={(e) => setTesting(e.target.value)}
++                  placeholder="Enter your test scores (SAT/ACT/AP) or your testing plans. Be specific about scores or target scores if you haven't taken the tests yet."
++                  className="w-full px-5 py-4 rounded-xl border-2 border-gray-200 focus:border-transparent focus:ring-4 focus:ring-indigo-600/20 transition-all duration-300 bg-white/80 shadow-sm min-h-[150px] text-gray-700 resize-none"
++                />
++              </div>
++            </div>
++          )}
++        </div>
+       </div>
++    );
++  };
++
++  return (
++    <form onSubmit={handleSubmit} className="relative max-w-4xl mx-auto">
++      {/* Background decorative elements */}
++      <div className="absolute inset-0 bg-gradient-to-br from-indigo-50 via-white to-purple-50 rounded-[2.5rem] transform rotate-3 scale-105 opacity-75"></div>
++      <div className="absolute inset-0 bg-gradient-to-tr from-indigo-50 via-white to-purple-50 rounded-[2.5rem] transform -rotate-2 scale-105 opacity-75"></div>
++      
++      {/* Main content */}
++      <div className="relative bg-white/80 backdrop-blur-xl rounded-[2rem] shadow-2xl p-8 md:p-12">
++        <div className="absolute inset-0 bg-gradient-to-br from-white/40 to-white/20 rounded-[2rem]"></div>
++        
++        <div className="relative">
++          {/* Progress navigation */}
++          <div className="flex items-center justify-between mb-12 bg-gray-50/50 rounded-2xl p-2">
++            {formSections.map((section, index) => (
++              <button
++                key={index}
++                type="button"
++                onClick={() => setActiveSection(index)}
++                className={`flex items-center space-x-2 px-4 py-3 rounded-xl transition-all duration-300 ${
++                  index === activeSection
++                    ? 'bg-white shadow-md text-indigo-600 transform scale-105'
++                    : 'text-gray-500 hover:text-gray-700 hover:bg-white/50'
++                }`}
++              >
++                <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${
++                  index === activeSection
++                    ? 'bg-gradient-to-br from-indigo-600 to-purple-600 text-white'
++                    : 'bg-gray-100 text-gray-500'
++                }`}>
++                  {section.icon}
++                </div>
++                <span className="hidden md:block font-medium">{section.title}</span>
++              </button>
++            ))}
++          </div>
+ 
+-      <button className="form-button" type="submit">Generate Roadmap</button>
++          {/* Progress bar */}
++          <div className="h-1.5 bg-gray-100 rounded-full mb-12 overflow-hidden">
++            <div
++              className="h-full bg-gradient-to-r from-indigo-600 via-purple-500 to-purple-600 rounded-full transition-all duration-500 ease-out"
++              style={{ width: `${((activeSection + 1) / formSections.length) * 100}%` }}
++            />
++          </div>
++
++          {/* Form content */}
++          <div className="min-h-[400px]">
++            {renderFormSection(formSections[activeSection])}
++          </div>
++
++          {/* Navigation buttons */}
++          <div className="flex justify-between mt-12 pt-8 border-t border-gray-100">
++            <button
++              type="button"
++              onClick={() => setActiveSection(prev => Math.max(0, prev - 1))}
++              className={`group px-6 py-3 rounded-xl text-sm font-medium transition-all duration-300 ${
++                activeSection === 0
++                  ? 'opacity-50 cursor-not-allowed bg-gray-50 text-gray-400'
++                  : 'bg-white text-indigo-600 hover:bg-indigo-50 border-2 border-indigo-600/10 hover:border-indigo-600'
++              }`}
++              disabled={activeSection === 0}
++            >
++              <div className="flex items-center space-x-2">
++                <svg className="w-5 h-5 transform group-hover:-translate-x-1 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
++                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
++                </svg>
++                <span>Previous</span>
++              </div>
++            </button>
++            
++            {activeSection === formSections.length - 1 ? (
++              <button
++                type="submit"
++                className="group px-8 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-medium rounded-xl hover:shadow-lg hover:shadow-indigo-600/20 transform hover:-translate-y-0.5 transition-all duration-300"
++              >
++                <div className="flex items-center space-x-2">
++                  <span>Generate Roadmap</span>
++                  <svg className="w-5 h-5 transform group-hover:translate-x-1 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
++                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
++                  </svg>
++                </div>
++              </button>
++            ) : (
++              <button
++                type="button"
++                onClick={() => setActiveSection(prev => Math.min(formSections.length - 1, prev + 1))}
++                className="group px-6 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-medium rounded-xl hover:shadow-lg hover:shadow-indigo-600/20 transform hover:-translate-y-0.5 transition-all duration-300"
++              >
++                <div className="flex items-center space-x-2">
++                  <span>Next</span>
++                  <svg className="w-5 h-5 transform group-hover:translate-x-1 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
++                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
++                  </svg>
++                </div>
++              </button>
++            )}
++          </div>
++        </div>
++      </div>
+     </form>
+   );
+ }
+diff --git a/frontend/src/components/ScholarshipList.jsx b/frontend/src/components/ScholarshipList.jsx
+index 959f561..9eef610 100644
+--- a/frontend/src/components/ScholarshipList.jsx
++++ b/frontend/src/components/ScholarshipList.jsx
+@@ -1,232 +1,255 @@
+-import React, { useEffect, useState } from 'react';
+-
+-function ScholarshipList(){
+-    const [scholarships, setScholarship] = useState([]);
+-    const [filter, setFilter] = useState('');
+-    const [sortBy, setSortBy] = useState('deadline');
+-    const [sortOrder, setSortOrder] = useState('asc');
+-
+-    useEffect(() => {
+-        fetch('/scholarships.json')
+-        .then((res) => res.json())
+-        .then((data) => setScholarship(data));
+-    }, [] );
+-
+-    const filtered = scholarships.filter((sch) =>
+-        filter === '' || sch.eligibility.includes(filter)
++import React, { useState, useEffect, useMemo } from 'react';
++import { Search, Calendar, DollarSign, Users, ExternalLink, Filter, Clock } from 'lucide-react';
++
++const ScholarshipList = () => {
++  const [scholarships, setScholarships] = useState([]);
++  const [searchTerm, setSearchTerm] = useState('');
++  const [selectedFilters, setSelectedFilters] = useState([]);
++  const [loading, setLoading] = useState(true);
++
++  useEffect(() => {
++    const loadScholarships = async () => {
++      try {
++        const response = await fetch('/scholarships.json');
++        const scholarshipData = await response.json();
++        setScholarships(scholarshipData);
++      } catch (error) {
++        console.error('Error loading scholarships:', error);
++      } finally {
++        setLoading(false);
++      }
++    };
++
++    loadScholarships();
++  }, []);
++
++  // Get all unique eligibility criteria for filtering
++  const allEligibilityCriteria = useMemo(() => {
++    const criteria = new Set();
++    scholarships.forEach(scholarship => {
++      scholarship.eligibility?.forEach(criterion => criteria.add(criterion));
++    });
++    return Array.from(criteria).sort();
++  }, [scholarships]);
++
++  // Filter scholarships based on search and filters
++  const filteredScholarships = useMemo(() => {
++    return scholarships.filter(scholarship => {
++      const matchesSearch = searchTerm === '' || 
++        scholarship.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
++        scholarship.description.toLowerCase().includes(searchTerm.toLowerCase());
++
++      const matchesFilters = selectedFilters.length === 0 || 
++        selectedFilters.every(filter => scholarship.eligibility?.includes(filter));
++
++      return matchesSearch && matchesFilters;
++    });
++  }, [scholarships, searchTerm, selectedFilters]);
++
++  const toggleFilter = (filter) => {
++    setSelectedFilters(prev => 
++      prev.includes(filter) 
++        ? prev.filter(f => f !== filter)
++        : [...prev, filter]
+     );
++  };
+ 
+-    const sorted = [...filtered].sort((a, b) => {
+-        let aValue, bValue;
+-        
+-        switch (sortBy) {
+-            case 'name':
+-                aValue = a.name.toLowerCase();
+-                bValue = b.name.toLowerCase();
+-                break;
+-            case 'deadline':
+-                aValue = new Date(a.deadline || '9999-12-31');
+-                bValue = new Date(b.deadline || '9999-12-31');
+-                break;
+-            case 'amount':
+-                aValue = parseFloat(a.amount.replace(/[^0-9]/g, '')) || 0;
+-                bValue = parseFloat(b.amount.replace(/[^0-9]/g, '')) || 0;
+-                break;
+-            default:
+-                return 0;
+-        }
+-        
+-        if (sortOrder === 'asc') {
+-            return aValue < bValue ? -1 : aValue > bValue ? 1 : 0;
+-        } else {
+-            return aValue > bValue ? -1 : aValue < bValue ? 1 : 0;
+-        }
++  const formatDate = (dateString) => {
++    if (!dateString) return 'TBA';
++    return new Date(dateString).toLocaleDateString('en-US', {
++      year: 'numeric',
++      month: 'short',
++      day: 'numeric'
+     });
++  };
+ 
+-    const handleSort = (column) => {
+-        if (sortBy === column) {
+-            setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
+-        } else {
+-            setSortBy(column);
+-            setSortOrder('asc');
+-        }
+-    };
++  const getDaysUntilDeadline = (deadline) => {
++    if (!deadline) return null;
++    const today = new Date();
++    const deadlineDate = new Date(deadline);
++    const diffTime = deadlineDate - today;
++    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
++    return diffDays;
++  };
+ 
+-    const formatDate = (dateString) => {
+-        if (!dateString) return 'TBD';
+-        return new Date(dateString).toLocaleDateString('en-US', {
+-            month: 'short',
+-            day: 'numeric',
+-            year: 'numeric'
+-        });
+-    };
++  const getDeadlineStatus = (deadline) => {
++    const days = getDaysUntilDeadline(deadline);
++    if (days === null) return { color: 'text-gray-500', text: 'TBA' };
++    if (days < 0) return { color: 'text-red-600', text: 'Closed' };
++    if (days <= 30) return { color: 'text-orange-600', text: `${days} days left` };
++    if (days <= 60) return { color: 'text-yellow-600', text: `${days} days left` };
++    return { color: 'text-green-600', text: `${days} days left` };
++  };
+ 
+-    const getEligibilityBadges = (eligibility) => {
+-        const badgeColors = {
+-            'low-income': 'bg-blue-600 text-blue-100 border-blue-400',
+-            'first-gen': 'bg-green-600 text-green-100 border-green-400',
+-            'Black/African American': 'bg-purple-600 text-purple-100 border-purple-400',
+-            'CS': 'bg-orange-600 text-orange-100 border-orange-400',
+-            'STEM': 'bg-red-600 text-red-100 border-red-400',
+-            'underrepresented': 'bg-indigo-600 text-indigo-100 border-indigo-400',
+-            'high school senior': 'bg-gray-600 text-gray-100 border-gray-400'
+-        };
+-        
+-        return eligibility.slice(0, 2).map((tag, index) => (
+-            <span key={index} className={`inline-block px-3 py-1 text-xs font-bold rounded-full mr-1 mb-1 border-2 shadow-md ${
+-                badgeColors[tag] || 'bg-gray-600 text-gray-100 border-gray-400'
+-            }`}>
+-                {tag}
+-            </span>
+-        ));
+-    };
++  if (loading) {
++    return (
++      <div className="max-w-6xl mx-auto p-6">
++        <div className="animate-pulse">
++          <div className="h-8 bg-gray-200 rounded w-1/3 mb-6"></div>
++          <div className="space-y-4">
++            {[1, 2, 3].map(i => (
++              <div key={i} className="h-32 bg-gray-200 rounded"></div>
++            ))}
++          </div>
++        </div>
++      </div>
++    );
++  }
+ 
+   return (
+-    <div className="w-full">
+-      <div className="mb-8 text-center">
+-        <h2 className="text-3xl font-bold text-gray-900 mb-2">🎯 Available Scholarships</h2>
+-        <p className="text-gray-600">Find scholarships that match your profile and goals</p>
++    <div className="max-w-6xl mx-auto p-6 bg-gray-50 min-h-screen">
++      <div className="mb-8">
++        <h1 className="text-4xl font-bold text-gray-900 mb-2">Scholarship Opportunities</h1>
++        <p className="text-gray-600">Discover funding opportunities for your education</p>
+       </div>
+ 
+-      <div className="mb-8 flex justify-center">
+-        <div className="bg-white rounded-xl p-6 shadow-lg">
+-          <label htmlFor="filter" className="block text-sm font-medium text-gray-700 mb-3 text-center">
+-            🔍 Filter by eligibility:
+-          </label>
+-          <select
+-            id="filter"
+-            value={filter}
+-            onChange={(e) => setFilter(e.target.value)}
+-            className="block w-full min-w-[280px] px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-gray-50"
+-          >
+-            <option value="">All Scholarships ({scholarships.length})</option>
+-            <option value="low-income">💰 Low-Income</option>
+-            <option value="first-gen">🎓 First-Generation</option>
+-            <option value="Black/African American">✊ Black/African American</option>
+-            <option value="CS">💻 Computer Science</option>
+-            <option value="STEM">🔬 STEM</option>
+-            <option value="underrepresented">🌍 Underrepresented</option>
+-          </select>
++      {/* Search and Filter Section */}
++      <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
++        {/* Search Bar */}
++        <div className="relative mb-6">
++          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
++          <input
++            type="text"
++            placeholder="Search scholarships by name or description..."
++            className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
++            value={searchTerm}
++            onChange={(e) => setSearchTerm(e.target.value)}
++          />
++        </div>
++
++        {/* Filters */}
++        <div className="mb-4">
++          <div className="flex items-center mb-3">
++            <Filter className="h-5 w-5 text-gray-600 mr-2" />
++            <span className="font-medium text-gray-700">Filter by eligibility:</span>
++          </div>
++          <div className="flex flex-wrap gap-2">
++            {allEligibilityCriteria.map(criterion => (
++              <button
++                key={criterion}
++                onClick={() => toggleFilter(criterion)}
++                className={`px-3 py-1 rounded-full text-sm font-medium transition-colors ${
++                  selectedFilters.includes(criterion)
++                    ? 'bg-blue-100 text-blue-800 border border-blue-300'
++                    : 'bg-gray-100 text-gray-700 border border-gray-300 hover:bg-gray-200'
++                }`}
++              >
++                {criterion}
++              </button>
++            ))}
++          </div>
++        </div>
++
++        {/* Results count */}
++        <div className="text-sm text-gray-600">
++          Showing {filteredScholarships.length} of {scholarships.length} scholarships
+         </div>
+       </div>
+ 
+-      <div className="bg-gray-900 rounded-2xl shadow-2xl border-4 border-yellow-400 overflow-hidden transform hover:scale-[1.01] transition-all duration-300">
+-        <div className="bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500 p-1">
+-          <div className="bg-gray-900 rounded-xl">
+-            <div className="overflow-x-auto">
+-              <table className="w-full">
+-                <thead className="bg-gradient-to-r from-purple-800 via-blue-800 to-indigo-900 text-white">
+-                  <tr>
+-                    <th 
+-                      className="px-6 py-5 text-left text-sm font-bold cursor-pointer hover:bg-purple-700 transition-all duration-200 border-r border-purple-600"
+-                      onClick={() => handleSort('name')}
+-                    >
+-                      <div className="flex items-center space-x-2">
+-                        <span className="text-yellow-300">💎 Scholarship Name</span>
+-                        <span className="text-lg text-yellow-300">
+-                          {sortBy === 'name' ? (sortOrder === 'asc' ? '⬆️' : '⬇️') : '↕️'}
+-                        </span>
+-                      </div>
+-                    </th>
+-                    <th className="px-6 py-5 text-left text-sm font-bold text-yellow-300 border-r border-purple-600">📝 Description</th>
+-                    <th className="px-6 py-5 text-left text-sm font-bold text-yellow-300 border-r border-purple-600">✅ Eligibility</th>
+-                    <th 
+-                      className="px-6 py-5 text-left text-sm font-bold cursor-pointer hover:bg-purple-700 transition-all duration-200 border-r border-purple-600"
+-                      onClick={() => handleSort('amount')}
+-                    >
+-                      <div className="flex items-center space-x-2">
+-                        <span className="text-yellow-300">💰 Amount</span>
+-                        <span className="text-lg text-yellow-300">
+-                          {sortBy === 'amount' ? (sortOrder === 'asc' ? '⬆️' : '⬇️') : '↕️'}
++      {/* Scholarship Cards */}
++      <div className="space-y-6">
++        {filteredScholarships.map((scholarship, index) => {
++          const deadlineStatus = getDeadlineStatus(scholarship.deadline);
++          
++          return (
++            <div key={index} className="bg-white rounded-lg shadow-sm border border-gray-200 hover:shadow-md transition-shadow">
++              <div className="p-6">
++                <div className="flex justify-between items-start mb-4">
++                  <div className="flex-1">
++                    <h3 className="text-xl font-semibold text-gray-900 mb-2">
++                      {scholarship.name}
++                    </h3>
++                    <p className="text-gray-600 mb-4">{scholarship.description}</p>
++                  </div>
++                  <div className={`text-sm font-medium ${deadlineStatus.color} ml-4`}>
++                    {deadlineStatus.text}
++                  </div>
++                </div>
++
++                <div className="grid md:grid-cols-3 gap-4 mb-4">
++                  {/* Amount */}
++                  <div className="flex items-center">
++                    <DollarSign className="h-5 w-5 text-green-600 mr-2" />
++                    <div>
++                      <div className="text-sm text-gray-500">Award Amount</div>
++                      <div className="font-medium">{scholarship.amount}</div>
++                    </div>
++                  </div>
++
++                  {/* Application Opens */}
++                  <div className="flex items-center">
++                    <Clock className="h-5 w-5 text-blue-600 mr-2" />
++                    <div>
++                      <div className="text-sm text-gray-500">Application Opens</div>
++                      <div className="font-medium">{formatDate(scholarship.application_open)}</div>
++                    </div>
++                  </div>
++
++                  {/* Deadline */}
++                  <div className="flex items-center">
++                    <Calendar className="h-5 w-5 text-red-600 mr-2" />
++                    <div>
++                      <div className="text-sm text-gray-500">Deadline</div>
++                      <div className="font-medium">{formatDate(scholarship.deadline)}</div>
++                    </div>
++                  </div>
++                </div>
++
++                {/* Eligibility Tags */}
++                <div className="flex items-start mb-4">
++                  <Users className="h-5 w-5 text-purple-600 mr-2 mt-0.5" />
++                  <div>
++                    <div className="text-sm text-gray-500 mb-1">Eligibility Requirements</div>
++                    <div className="flex flex-wrap gap-1">
++                      {scholarship.eligibility?.map((criterion, idx) => (
++                        <span
++                          key={idx}
++                          className="px-2 py-1 bg-purple-100 text-purple-800 text-xs rounded-full"
++                        >
++                          {criterion}
+                         </span>
+-                      </div>
+-                    </th>
+-                    <th className="px-6 py-5 text-left text-sm font-bold text-yellow-300 border-r border-purple-600">🚀 Opens</th>
+-                    <th 
+-                      className="px-6 py-5 text-left text-sm font-bold cursor-pointer hover:bg-purple-700 transition-all duration-200 border-r border-purple-600"
+-                      onClick={() => handleSort('deadline')}
++                      ))}
++                    </div>
++                  </div>
++                </div>
++
++                {/* Link */}
++                {scholarship.link && scholarship.link !== "Link will be added when it comes out" && (
++                  <div className="pt-4 border-t border-gray-100">
++                    <a
++                      href={scholarship.link}
++                      target="_blank"
++                      rel="noopener noreferrer"
++                      className="inline-flex items-center text-blue-600 hover:text-blue-800 font-medium"
+                     >
+-                      <div className="flex items-center space-x-2">
+-                        <span className="text-yellow-300">⏰ Deadline</span>
+-                        <span className="text-lg text-yellow-300">
+-                          {sortBy === 'deadline' ? (sortOrder === 'asc' ? '⬆️' : '⬇️') : '↕️'}
+-                        </span>
+-                      </div>
+-                    </th>
+-                    <th className="px-6 py-5 text-center text-sm font-bold text-yellow-300">🎯 Action</th>
+-                  </tr>
+-                </thead>
+-                <tbody className="divide-y-2 divide-gray-700">
+-                  {sorted.map((scholarship, index) => (
+-                    <tr key={scholarship.name} className={`hover:bg-gray-800 transition-all duration-200 transform hover:scale-[1.01] ${index % 2 === 0 ? 'bg-gray-900' : 'bg-gray-850'}`}>
+-                      <td className="px-6 py-6 border-r border-gray-700">
+-                        <div className="flex items-center space-x-4">
+-                          <span className="text-3xl animate-pulse">
+-                            {scholarship.amount?.includes('Full') ? '🏆' : '💎'}
+-                          </span>
+-                          <div>
+-                            <h3 className="text-lg font-bold text-white bg-gradient-to-r from-yellow-400 to-orange-500 bg-clip-text text-transparent">
+-                              {scholarship.name}
+-                            </h3>
+-                          </div>
+-                        </div>
+-                      </td>
+-                      <td className="px-6 py-6 border-r border-gray-700">
+-                        <p className="text-sm text-gray-300 max-w-xs leading-relaxed">{scholarship.description}</p>
+-                      </td>
+-                      <td className="px-6 py-6 border-r border-gray-700">
+-                        <div className="flex flex-wrap gap-2">
+-                          {getEligibilityBadges(scholarship.eligibility)}
+-                        </div>
+-                      </td>
+-                      <td className="px-6 py-6 border-r border-gray-700">
+-                        <span className="text-sm font-bold text-green-400 bg-green-900 px-4 py-2 rounded-full border-2 border-green-500 shadow-lg">
+-                          {scholarship.amount}
+-                        </span>
+-                      </td>
+-                      <td className="px-6 py-6 border-r border-gray-700">
+-                        <span className="text-sm font-semibold text-blue-400 bg-blue-900 px-4 py-2 rounded-full border-2 border-blue-500">
+-                          {formatDate(scholarship.application_open)}
+-                        </span>
+-                      </td>
+-                      <td className="px-6 py-6 border-r border-gray-700">
+-                        <span className="text-sm font-bold text-red-400 bg-red-900 px-4 py-2 rounded-full border-2 border-red-500 animate-pulse">
+-                          {formatDate(scholarship.deadline)}
+-                        </span>
+-                      </td>
+-                      <td className="px-6 py-6 text-center">
+-                        <a 
+-                          href={scholarship.link} 
+-                          target="_blank" 
+-                          rel="noopener noreferrer" 
+-                          className={`inline-flex items-center px-6 py-3 rounded-xl font-bold text-sm transition-all duration-300 transform hover:scale-110 ${
+-                            scholarship.link.includes('will be added') 
+-                              ? 'bg-gray-600 text-gray-400 cursor-not-allowed border-2 border-gray-500' 
+-                              : 'bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500 text-white shadow-xl hover:shadow-2xl border-2 border-yellow-300'
+-                          }`}
+-                          {...(scholarship.link.includes('will be added') && { 'aria-disabled': true })}
+-                        >
+-                          {scholarship.link.includes('will be added') ? '⏳ Coming Soon' : '🚀 Apply Now'}
+-                        </a>
+-                      </td>
+-                    </tr>
+-                  ))}
+-                </tbody>
+-              </table>
++                      <ExternalLink className="h-4 w-4 mr-1" />
++                      Apply Now
++                    </a>
++                  </div>
++                )}
++                
++                {scholarship.link === "Link will be added when it comes out" && (
++                  <div className="pt-4 border-t border-gray-100">
++                    <span className="text-gray-500 text-sm">Application link coming soon</span>
++                  </div>
++                )}
++              </div>
+             </div>
+-          </div>
+-        </div>
++          );
++        })}
+       </div>
+-      
+-      {sorted.length === 0 && (
++
++      {filteredScholarships.length === 0 && !loading && (
+         <div className="text-center py-12">
+-          <div className="text-gray-400 text-6xl mb-4">🔍</div>
++          <div className="text-gray-400 mb-4">
++            <Search className="h-16 w-16 mx-auto" />
++          </div>
+           <h3 className="text-lg font-medium text-gray-900 mb-2">No scholarships found</h3>
+-          <p className="text-gray-600">Try adjusting your filter to see more scholarships.</p>
++          <p className="text-gray-500">Try adjusting your search terms or filters</p>
+         </div>
+       )}
+     </div>
+   );
+-}
++};
+ 
+ export default ScholarshipList;
+\ No newline at end of file
+diff --git a/frontend/src/index.css b/frontend/src/index.css
+index 18679eb..5d48521 100644
+--- a/frontend/src/index.css
++++ b/frontend/src/index.css
+@@ -1,3 +1,7 @@
++@tailwind base;
++@tailwind components;
++@tailwind utilities;
++
+ :root {
+   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+   line-height: 1.5;

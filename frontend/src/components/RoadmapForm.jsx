@@ -7,6 +7,7 @@ function RoadmapForm({ setRoadmap, setLoading }) {
   const [activities, setActivities] = useState('');
   const [demographic, setDemographic] = useState('');
   const [testing, setTesting] = useState('');
+  const [collegeGoals, setCollegeGoals] = useState(''); 
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -14,7 +15,7 @@ function RoadmapForm({ setRoadmap, setLoading }) {
     const res = await fetch(`${import.meta.env.VITE_BACKEND}/generate`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ gpa, grade, interests, activities, demographic, testing })
+      body: JSON.stringify({ gpa, grade, interests, activities, demographic, testing, collegeGoals })
     });
     const data = await res.json();
     setRoadmap(data.roadmap);
@@ -100,6 +101,17 @@ function RoadmapForm({ setRoadmap, setLoading }) {
           onChange={(e) => setTesting(e.target.value)}
           placeholder="e.g., 1330 SAT, haven't taken the SAT yet, plan on taking it soon aiming for...
 Please specify the score so if your score is SAT say {score} SAT, etc."
+        />
+      </div>
+
+        <div className="form-group">
+        <label className="form-label" htmlFor="collegeGoals">College Goals:</label>
+        <textarea
+          className="form-textarea"
+          id="collegeGoals"
+          value={collegeGoals}
+          onChange={(e) => setCollegeGoals(e.target.value)}
+          placeholder="e.g., Ivy League, state schools, specific universities, community college transfer, gap year plans"
         />
       </div>
 

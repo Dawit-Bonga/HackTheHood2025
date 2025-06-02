@@ -3,6 +3,8 @@ from fastapi.middleware.cors import CORSMiddleware
 from openai import OpenAI
 import os
 from dotenv import load_dotenv
+import sqlite3 
+from datetime import datetime
 
 load_dotenv()
 
@@ -21,6 +23,70 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+
+def init_db():
+    conn = sqlite3.connect('feedback.db')
+    cursor = conn.cursor()
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS feedback (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            feedback_text TEXT NOT NULL,
+            timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
+            user_ip TEXT
+        )
+    ''')
+    conn.commit()
+    conn.close()
+    
+init_db()
+
+@app.post("/feedback")
+async def submit_feedback(request: Request):
+  data = await request.json()
+  feedback_text = data.get("feedback")
+  
+  if not feedback_text:
+    return {"error": "Feedback cannot be empty"}
+  
+  try:
+    conn = sqlite3.connect("feedback.db")
+    cursor = conn.cursor()
+    cursor.execute("INSERT INTO feedback (feedback_text, user_ip) VALUES (?, ?)",
+                   (feedback_text, request.client.host)
+                   )
+    conn.commit()
+    conn.close()
+    return {"success": True, "message": "Feedback received successfully"}
+  except Exception as e:
+    return {"error": f"failed to save feedback: {str(e)}"}
+  
+  
+  
+@app.get("/admin/feedback")
+async def get_feedback():
+    try:
+        conn = sqlite3.connect('feedback.db')
+        cursor = conn.cursor()
+        cursor.execute("SELECT * FROM feedback ORDER BY timestamp DESC")
+        rows = cursor.fetchall()
+        conn.close()
+        
+        feedback_list = [
+            {
+                "id": row[0],
+                "feedback": row[1], 
+                "timestamp": row[2],
+                "user_ip": row[3]
+            }
+            for row in rows
+        ]
+        
+        return {"feedback": feedback_list}
+    except Exception as e:
+        return {"error": str(e)}
+    
+
+
 @app.post("/generate")
 async def generate_roadmap(request: Request):
     data = await request.json()
@@ -30,6 +96,7 @@ async def generate_roadmap(request: Request):
     activities = data.get("activities")
     demographic = data.get("demographics")
     testing = data.get("testing")
+    goals = data.get("collegeGoals")
     
     example_timeline = """
 **May–August**
@@ -84,6 +151,8 @@ async def generate_roadmap(request: Request):
     "Give academic goals, extracurricular tips, and summer suggestions that are aligned with their stated interests and clubs. "
     "Reference their current activities directly and suggest specific scholarships, programs, or competitions that match their situation. "
     f"also take this information about their testing into account: {testing}"
+    
+    f"The student is aiming for this in their colleges: {goals} and you should advice them on routes they should take and also advice them on other options of school if neccesary(if they are for example very below the standard)"
 
     f"Use this timeline format as an example of what the structure should look like:\n\n{example_timeline}\n\n"
     
@@ -97,7 +166,8 @@ async def generate_roadmap(request: Request):
         response = client.chat.completions.create(
             model="gpt-4",
             messages=[{"role": "user", "content": prompt}],
-            temperature=0.7
+            temperature=0.7,
+            # max_tokens=2300
         )
         roadmap = response.choices[0].message.content
         return {"roadmap": roadmap}
