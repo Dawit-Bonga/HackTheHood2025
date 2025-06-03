@@ -152,19 +152,21 @@ async def generate_roadmap(request: Request):
     "Reference their current activities directly and suggest specific scholarships, programs, or competitions that match their situation. "
     f"also take this information about their testing into account: {testing}"
     
-    f"The student is aiming for this in their colleges: {goals} and you should advice them on routes they should take and also advice them on other options of school if neccesary(if they are for example very below the standard)"
+    f"The student is aiming for this in their colleges: {goals} and you should advice them on routes they should take and also advice them on other options of school if neccesary(if they are for example very below the standard). Make sure to give them advice about colleges outside of their goals too since it is important to not be limited"
 
     f"Use this timeline format as an example of what the structure should look like:\n\n{example_timeline}\n\n"
     
     "DO NOT give generic advice like 'join clubs' — personalize it based on what they've already done. "
     "Be warm, helpful, and encouraging in tone, while still being strategic. Make it feel like it was written just for them."
+    
+    "After your final thoughts and encourgments, don't say anything else like asking to review the students essay or anything like that. "
 )
 
         
         
     try:
         response = client.chat.completions.create(
-            model="gpt-4",
+            model="gpt-4.1-mini",
             messages=[{"role": "user", "content": prompt}],
             temperature=0.7,
             # max_tokens=2300
