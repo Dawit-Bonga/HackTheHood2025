@@ -3,7 +3,8 @@ from fastapi.middleware.cors import CORSMiddleware
 from openai import OpenAI
 import os
 from dotenv import load_dotenv
-import sqlite3 
+import psycopg2 
+from psycopg2.extras import RealDictCursor
 from datetime import datetime
 
 load_dotenv()
@@ -25,11 +26,12 @@ app.add_middleware(
 
 
 def init_db():
-    conn = sqlite3.connect('feedback.db')
+    DATABASE_URL = os.getenv("DATABASE_URL")
+    conn = psycopg2.connect(DATABASE_URL)
     cursor = conn.cursor()
     cursor.execute('''
         CREATE TABLE IF NOT EXISTS feedback (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            id SERIAL PRIMARY KEY,
             feedback_text TEXT NOT NULL,
             timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
             user_ip TEXT
@@ -42,6 +44,7 @@ init_db()
 
 @app.post("/feedback")
 async def submit_feedback(request: Request):
+  DATABASE_URL = os.getenv("DATABASE_URL")
   data = await request.json()
   feedback_text = data.get("feedback")
   
@@ -49,9 +52,9 @@ async def submit_feedback(request: Request):
     return {"error": "Feedback cannot be empty"}
   
   try:
-    conn = sqlite3.connect("feedback.db")
+    conn = psycopg2.connect(DATABASE_URL)
     cursor = conn.cursor()
-    cursor.execute("INSERT INTO feedback (feedback_text, user_ip) VALUES (?, ?)",
+    cursor.execute("INSERT INTO feedback (feedback_text, user_ip) VALUES (%s, %s)",
                    (feedback_text, request.client.host)
                    )
     conn.commit()
@@ -64,23 +67,15 @@ async def submit_feedback(request: Request):
   
 @app.get("/admin/feedback")
 async def get_feedback():
+    DATABASE_URL = os.getenv("DATABASE_URL")
     try:
-        conn = sqlite3.connect('feedback.db')
-        cursor = conn.cursor()
+        conn = psycopg2.connect(DATABASE_URL)
+        cursor = conn.cursor(cursor_factory=RealDictCursor)
         cursor.execute("SELECT * FROM feedback ORDER BY timestamp DESC")
         rows = cursor.fetchall()
         conn.close()
         
-        feedback_list = [
-            {
-                "id": row[0],
-                "feedback": row[1], 
-                "timestamp": row[2],
-                "user_ip": row[3]
-            }
-            for row in rows
-        ]
-        
+        feedback_list = [dict(row) for row in rows]
         return {"feedback": feedback_list}
     except Exception as e:
         return {"error": str(e)}
@@ -161,7 +156,7 @@ async def generate_roadmap(request: Request):
     
     "After your final thoughts and encourgments, don't say anything else like asking to review the students essay or anything like that. "
     
-    "also stop using ** and things like that to make characters bold, the character output where you appear doesn't allow that"
+#     "also stop using ** and things like that to make characters bold, the character output where you appear doesn't allow that"
 )
 
         
