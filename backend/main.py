@@ -33,7 +33,7 @@ def init_db():
         CREATE TABLE IF NOT EXISTS feedback (
             id SERIAL PRIMARY KEY,
             feedback_text TEXT NOT NULL,
-            timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
+            timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
             user_ip TEXT
         )
     ''')
