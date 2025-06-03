@@ -156,6 +156,8 @@ async def generate_roadmap(request: Request):
     
     "After your final thoughts and encourgments, don't say anything else like asking to review the students essay or anything like that. "
     
+    "Throughout this process be honest and reasonable while being uplifitng and helpful"
+    
 #     "also stop using ** and things like that to make characters bold, the character output where you appear doesn't allow that"
 )
 
