@@ -160,6 +160,8 @@ async def generate_roadmap(request: Request):
     "Be warm, helpful, and encouraging in tone, while still being strategic. Make it feel like it was written just for them."
     
     "After your final thoughts and encourgments, don't say anything else like asking to review the students essay or anything like that. "
+    
+    "also stop using ** and things like that to make characters bold, the character output where you appear doesn't allow that"
 )
 
         
