@@ -1,13 +1,14 @@
 import React from 'react';
+import ScholarshipList from './ScholarshipList';
 
 function Scholarship() {
   return (
     <main className="py-12 px-6 bg-white text-gray-800">
       <section className="max-w-5xl mx-auto">
-        <div className="text-center mb-8">
+        {/* <div className="text-center mb-8">
           <h1 className="text-2xl font-bold text-yellow-600">🚧 THIS PAGE IS UNDER CONSTRUCTION</h1>
           <p className="text-gray-600 mt-2">But it will be coming soon!</p>
-        </div>
+        </div> */}
 
         <h2 className="text-3xl font-bold mb-4 text-center">Scholarship Opportunities</h2>
         <p className="text-lg leading-relaxed text-center mb-10">
@@ -48,6 +49,9 @@ function Scholarship() {
           </ul>
         </div>
       </section>
+
+      <ScholarshipList />
+
     </main>
   );
 }
