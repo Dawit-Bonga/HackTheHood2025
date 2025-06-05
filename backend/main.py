@@ -174,3 +174,66 @@ async def generate_roadmap(request: Request):
         return {"roadmap": roadmap}
     except Exception as e:
         return {"error": str(e)}
+      
+      
+@app.post("/essay")
+async def grade_essay(request: Request):
+    data = await request.json()
+    grade = data.get("grade")
+    prompt = data.get("prompt")
+    essay = data.get("essay")
+    program = data.get("program")
+    
+    advice = """
+"""
+    prompt = (
+      f""" 
+      You are a college admissions coach giving supportive and constructive feedback on student essays. The student may be a first-generation applicant or from an underrepresented background, so prioritize encouragement and clarity.
+
+Here is the prompt they are responding to:
+{prompt}
+
+They are applying to:
+{program}
+
+The student's grade level is: {grade}
+
+Here is their essay:
+{essay}
+
+Please provide feedback focused on:
+- Clarity of ideas
+- Storytelling and emotional impact
+- Structure and organization
+- Grammar and sentence fluency
+- How well it answers the prompt
+- What could be improved, and what is strong
+-final grade and thoughts
+-Be specific with your feedback and don't be afraid to make it long. The more detailed and actually attentive you are, the better.
+
+Use a warm, helpful tone. Speak directly to the student (e.g., “One thing you’re doing well is…” or “You might consider…”). Be clear, actionable, and encouraging.
+
+However also be realistic and critical when necessary with your judgmenets so that the student can get the most benefit out of this. At the end of your feedback have a Grade:[The grade you'd give them out of a 100] and then say resubmit after your changes to see the new grade.
+
+Also make sure to say this advice is to be taken with a grain of salt because you don't always need to take advice if you think it works for you.
+
+
+      
+      
+      """
+)
+    
+    
+    try:
+        response = client.chat.completions.create(
+            model="gpt-4.1-mini",
+            messages=[{"role": "user", "content": prompt}],
+            temperature=0.7,
+            # max_tokens=2300
+        )
+        feedback = response.choices[0].message.content
+        return {"feedback": feedback}
+    except Exception as e:
+        return {"error": str(e)}
+  
+   

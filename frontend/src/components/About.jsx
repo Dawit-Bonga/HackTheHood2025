@@ -15,17 +15,17 @@ function About() {
           </p>
           
           <div className="grid md:grid-cols-3 gap-8 mb-16">
-            <div className="text-center p-6 bg-gray-50 rounded-lg">
+            <div className="text-center p-6 bg-gray-50 rounded-lg transition-transform hover:scale-105">
               <h3 className="text-xl font-semibold mb-3">Personalized Planning</h3>
               <p className="text-gray-600">Get customized roadmaps based on your goals, interests, and circumstances.</p>
             </div>
             
-            <div className="text-center p-6 bg-gray-50 rounded-lg">
+            <div className="text-center p-6 bg-gray-50 rounded-lg transition-transform hover:scale-105">
               <h3 className="text-xl font-semibold mb-3">First-Gen Focused</h3>
               <p className="text-gray-600">Specifically designed to address the unique challenges faced by first-generation college students.</p>
             </div>
             
-            <div className="text-center p-6 bg-gray-50 rounded-lg">
+            <div className="text-center p-6 bg-gray-50 rounded-lg transition-transform hover:scale-105">
               <h3 className="text-xl font-semibold mb-3">Comprehensive Support</h3>
               <p className="text-gray-600">From academic planning to scholarship opportunities, we've got you covered.</p>
             </div>
@@ -39,14 +39,16 @@ function About() {
               the opportunity to pursue higher education with confidence.
             </p>
           </div>
-{/* 
-          <div className="text-center">
-            <img 
-              src="IMG_4558.jpg" 
-              alt="About us" 
-              className="mx-auto rounded-lg shadow-md max-w-sm"
-            />
-          </div> */}
+
+    {/* <div className="flex flex-col items-center my-8">
+        <img 
+           src="IMG_6667.jpg" 
+          alt="About us" 
+         className="rounded-xl shadow-lg max-w-xs border border-gray-200 mb-4 transition-transform hover:scale-105"
+         />
+        <p className="text-gray-700 text-lg font-medium">Dawit Bonga: The Creator</p>
+    </div> */}
+
         </div>
       </section>
     
