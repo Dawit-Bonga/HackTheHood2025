@@ -8,6 +8,7 @@ function RoadmapForm({ setRoadmap, setLoading }) {
   const [demographic, setDemographic] = useState('');
   const [testing, setTesting] = useState('');
   const [collegeGoals, setCollegeGoals] = useState(''); 
+  const [classes, setClasses] = useState('');
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -15,7 +16,7 @@ function RoadmapForm({ setRoadmap, setLoading }) {
     const res = await fetch(`${import.meta.env.VITE_BACKEND}/generate`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ gpa, grade, interests, activities, demographic, testing, collegeGoals })
+      body: JSON.stringify({ gpa, grade, interests, activities, demographic, testing, collegeGoals, classes })
     });
     const data = await res.json();
     setRoadmap(data.roadmap);
@@ -53,6 +54,18 @@ function RoadmapForm({ setRoadmap, setLoading }) {
           min="0"
           max="4"
           placeholder="e.g., 3.5"
+          required
+        />
+      </div>
+
+        <div className="form-group">
+        <label className="form-label" htmlFor="classes">Course Rigor:</label>
+        <textarea
+          className="form-textarea"
+          id="classes"
+          value={classes}
+          onChange={(e) => setClasses(e.target.value)}
+          placeholder="e.g. I have taken 7/11 AP classes, We have no AP or Honors Classes.Also feel free to drop your upcoming schedule"
           required
         />
       </div>

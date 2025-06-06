@@ -92,6 +92,7 @@ async def generate_roadmap(request: Request):
     demographic = data.get("demographics")
     testing = data.get("testing")
     goals = data.get("collegeGoals")
+    classes = data.get("classes")
     
     example_timeline = """
 **May–August**
@@ -157,6 +158,8 @@ async def generate_roadmap(request: Request):
     "After your final thoughts and encourgments, don't say anything else like asking to review the students essay or anything like that. "
     
     "Throughout this process be honest and reasonable while being uplifitng and helpful"
+    
+    f"This additional information about their classes: {classes} so take this into consideration too. However you can't be certain what their school offers so everything should be a suggestion for future courses to take"
     
 #     "also stop using ** and things like that to make characters bold, the character output where you appear doesn't allow that"
 )
