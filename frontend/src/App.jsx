@@ -6,7 +6,6 @@ import About from './components/About';
 import Roadmap from './components/Roadmap';
 import Scholarship from './components/Scholarship';
 import EssayPage from './components/Essay'
-import { Analytics } from '@vercel/analytics/react';
 import './App.css';
 
 function App() {
@@ -22,7 +21,6 @@ function App() {
           <Route path="/scholarship" element={<Scholarship />} />
           <Route path="essay" element={<EssayPage />} />
         </Routes>
-        <Analytics />
       </div>
     </Router>
   );
