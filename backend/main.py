@@ -191,7 +191,7 @@ async def grade_essay(request: Request):
 """
     prompt = (
       f""" 
-      You are a college admissions coach giving supportive and constructive feedback on student essays. The student may be a first-generation applicant or from an underrepresented background, so prioritize encouragement and clarity.
+      You are a college admissions coach giving supportive and constructive feedback on student essays. prioritize encouragement and clarity/ make your response spaced out and not too clumpy.
 
 Here is the prompt they are responding to:
 {prompt}
