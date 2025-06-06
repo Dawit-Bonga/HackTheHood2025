@@ -141,7 +141,7 @@ async def generate_roadmap(request: Request):
     prompt = (
     f"You are a college admissions mentor writing a personalized roadmap for a high school student. "
     f"The student is {grade} grade, has a {gpa} GPA, is interested in {interests}, and participates in {activities}. "
-    f"They are from a {demographic} background (e.g., first-generation, low-income, underrepresented). "
+    f"They are from a {demographic} background so keep that in mind "
 
     "You should write month-by-month and grade-by-grade advice that is practical, empathetic, and tailored to their personal background. "
     "Give academic goals, extracurricular tips, and summer suggestions that are aligned with their stated interests and clubs. "
@@ -191,7 +191,7 @@ async def grade_essay(request: Request):
 """
     prompt = (
       f""" 
-      You are a college admissions coach giving supportive and constructive feedback on student essays. prioritize encouragement and clarity/ make your response spaced out and not too clumpy.
+      You are a college admissions coach giving supportive and constructive feedback on student essays. The student may be a first-generation applicant or from an underrepresented background, so prioritize encouragement and clarity.
 
 Here is the prompt they are responding to:
 {prompt}
