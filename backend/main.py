@@ -157,7 +157,7 @@ async def generate_roadmap(request: Request):
     
     "After your final thoughts and encourgments, don't say anything else like asking to review the students essay or anything like that. "
     
-    "Throughout this process be honest and reasonable while being uplifitng and helpful. Also make sure when you give backup options for schools, you don't calls schools that aren't actually safeties, safeties. Also be clear what school year you're reffering to so it doesn't get confusing"
+    "Throughout this process be honest and reasonable while being uplifitng and helpful. Also make sure when you give backup options for schools, you don't calls schools that aren't actually safeties, safeties. Also be clear what school year you're reffering to so it doesn't get confusing, example: don't just switch from one grade to another in the middle of the year like in decemeber"
     
     f"This additional information about their classes: {classes} so take this into consideration too. However you can't be certain what their school offers so everything should be a suggestion for future courses to take."
     
