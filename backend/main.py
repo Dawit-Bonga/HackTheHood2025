@@ -25,60 +25,60 @@ app.add_middleware(
 )
 
 
-def init_db():
-    DATABASE_URL = os.getenv("DATABASE_URL")
-    conn = psycopg2.connect(DATABASE_URL)
-    cursor = conn.cursor()
-    cursor.execute('''
-        CREATE TABLE IF NOT EXISTS feedback (
-            id SERIAL PRIMARY KEY,
-            feedback_text TEXT NOT NULL,
-            timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-            user_ip TEXT
-        )
-    ''')
-    conn.commit()
-    conn.close()
+# def init_db():
+#     DATABASE_URL = os.getenv("DATABASE_URL")
+#     conn = psycopg2.connect(DATABASE_URL)
+#     cursor = conn.cursor()
+#     cursor.execute('''
+#         CREATE TABLE IF NOT EXISTS feedback (
+#             id SERIAL PRIMARY KEY,
+#             feedback_text TEXT NOT NULL,
+#             timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+#             user_ip TEXT
+#         )
+#     ''')
+#     conn.commit()
+#     conn.close()
     
-init_db()
+# init_db()
 
-@app.post("/feedback")
-async def submit_feedback(request: Request):
-  DATABASE_URL = os.getenv("DATABASE_URL")
-  data = await request.json()
-  feedback_text = data.get("feedback")
+# @app.post("/feedback")
+# async def submit_feedback(request: Request):
+#   DATABASE_URL = os.getenv("DATABASE_URL")
+#   data = await request.json()
+#   feedback_text = data.get("feedback")
   
-  if not feedback_text:
-    return {"error": "Feedback cannot be empty"}
+#   if not feedback_text:
+#     return {"error": "Feedback cannot be empty"}
   
-  try:
-    conn = psycopg2.connect(DATABASE_URL)
-    cursor = conn.cursor()
-    cursor.execute("INSERT INTO feedback (feedback_text, user_ip) VALUES (%s, %s)",
-                   (feedback_text, request.client.host)
-                   )
-    conn.commit()
-    conn.close()
-    return {"success": True, "message": "Feedback received successfully"}
-  except Exception as e:
-    return {"error": f"failed to save feedback: {str(e)}"}
+#   try:
+#     conn = psycopg2.connect(DATABASE_URL)
+#     cursor = conn.cursor()
+#     cursor.execute("INSERT INTO feedback (feedback_text, user_ip) VALUES (%s, %s)",
+#                    (feedback_text, request.client.host)
+#                    )
+#     conn.commit()
+#     conn.close()
+#     return {"success": True, "message": "Feedback received successfully"}
+#   except Exception as e:
+#     return {"error": f"failed to save feedback: {str(e)}"}
   
   
   
-@app.get("/admin/feedback")
-async def get_feedback():
-    DATABASE_URL = os.getenv("DATABASE_URL")
-    try:
-        conn = psycopg2.connect(DATABASE_URL)
-        cursor = conn.cursor(cursor_factory=RealDictCursor)
-        cursor.execute("SELECT * FROM feedback ORDER BY timestamp DESC")
-        rows = cursor.fetchall()
-        conn.close()
+# @app.get("/admin/feedback")
+# async def get_feedback():
+#     DATABASE_URL = os.getenv("DATABASE_URL")
+#     try:
+#         conn = psycopg2.connect(DATABASE_URL)
+#         cursor = conn.cursor(cursor_factory=RealDictCursor)
+#         cursor.execute("SELECT * FROM feedback ORDER BY timestamp DESC")
+#         rows = cursor.fetchall()
+#         conn.close()
         
-        feedback_list = [dict(row) for row in rows]
-        return {"feedback": feedback_list}
-    except Exception as e:
-        return {"error": str(e)}
+#         feedback_list = [dict(row) for row in rows]
+#         return {"feedback": feedback_list}
+#     except Exception as e:
+#         return {"error": str(e)}
     
 
 
@@ -139,28 +139,29 @@ async def generate_roadmap(request: Request):
     
     
     prompt = (
-    f"You are an expert college admissions counselor creating a personalized roadmap. "
-    f"Student Profile: {grade} grade, {gpa} GPA, SAT/testing: {testing}, "
-    f"interests: {interests}, activities: {activities}, background: {demographic}, "
-    f"college goals: {goals}, current classes: {classes}.\n\n"
+    f"You are a college admissions mentor writing a personalized roadmap for a high school student. "
+    f"The student is {grade} grade, has a {gpa} GPA, is interested in {interests}, and participates in {activities}. "
+    f"They are from a {demographic} background so keep that in mind "
+
+    "You should write month-by-month and grade-by-grade advice that is practical, empathetic, and tailored to their personal background. "
+    "Give academic goals, extracurricular tips, and summer suggestions that are aligned with their stated interests and clubs. "
+    "Reference their current activities directly and suggest specific scholarships, programs, or competitions that match their situation. "
+    f"also take this information about their testing into account: {testing}"
     
-    f"REQUIREMENTS:\n"
-    f"1. Start timeline from their CURRENT grade ({grade}) - don't go backwards\n"
-    f"2. Be realistic about their stats vs their goals\n"
-    f"3. Reference their specific activities and interests throughout\n"
-    f"4. Suggest concrete programs, scholarships, competitions that match their profile\n"
-    f"5. Include both reach and realistic backup options\n"
-    f"6. Use month-by-month format like this example:\n\n{example_timeline}\n\n"
+    f"The student is aiming for this in their colleges: {goals} and you should advice them on routes they should take and also advice them on other options of school if neccesary(if they are for example very below the standard). Make sure to give them advice about colleges outside of their goals too since it is important to not be limited"
+
+    f"Use this timeline format as an example of what the structure should look like:\n\n{example_timeline}\n\n"
     
-    f"TONE: Encouraging but honest. If their stats don't match their goals, gently suggest "
-    f"ways to improve OR better-fit schools. Don't just say 'work harder' - give specific actionable steps.\n\n"
+    "DO NOT give generic advice like 'join clubs' — personalize it based on what they've already done. "
+    "Be warm, helpful, and encouraging in tone, while still being strategic. Make it feel like it was written just for them."
     
-    f"PERSONALIZATION: Don't give generic advice. Build on what they're already doing. "
-    f"If they're in debate club, suggest debate-related opportunities. If they want CS, "
-    f"suggest CS competitions and programs.\n\n"
+    "After your final thoughts and encourgments, don't say anything else like asking to review the students essay or anything like that. "
     
-    f"OUTPUT: Month-by-month timeline starting from where they are now. End with encouraging "
-    f"final thoughts. No follow-up questions or offers to review essays."
+    "Throughout this process be honest and reasonable while being uplifitng and helpful. Also make sure when you give backup options for schools, you don't calls schools that aren't actually safeties, safeties. Also be clear what school year you're reffering to so it doesn't get confusing, example: don't just switch from one grade to another in the middle of the year like in decemeber"
+    
+    f"This additional information about their classes: {classes} so take this into consideration too. However you can't be certain what their school offers so everything should be a suggestion for future courses to take."
+    
+#     "also stop using ** and things like that to make characters bold, the character output where you appear doesn't allow that"
 )
 
         
