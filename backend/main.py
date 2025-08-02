@@ -17,7 +17,7 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=[
         "http://localhost:5177",
-        "https://roadmap-gen.vercel.app"],
+        "https://hack-the-hood2025.vercel.app"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
