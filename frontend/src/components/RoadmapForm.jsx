@@ -13,7 +13,7 @@ function RoadmapForm({ setRoadmap, setLoading }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    const res = await fetch(`${import.meta.env.VITE_BACKEND}/generate`, {
+    const res = await fetch(`http://127.0.0.1:8000/generate`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ gpa, grade, interests, activities, demographic, testing, collegeGoals, classes })
@@ -39,6 +39,8 @@ function RoadmapForm({ setRoadmap, setLoading }) {
           <option value="10">10th</option>
           <option value="11">11th</option>
           <option value="12">12th</option>
+          <option value="Community college">Community College</option>
+          <option value="other">Out of school, looking to get back in</option>
         </select>
       </div>
 

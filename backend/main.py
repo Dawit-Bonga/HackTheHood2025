@@ -3,8 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from openai import OpenAI
 import os
 from dotenv import load_dotenv
-import psycopg2 
-from psycopg2.extras import RealDictCursor
+
 from datetime import datetime
 
 load_dotenv()
@@ -17,69 +16,13 @@ app = FastAPI()
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
-        "http://localhost:5173",
+        "http://localhost:5177",
         "https://roadmap-gen.vercel.app"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-
-# def init_db():
-#     DATABASE_URL = os.getenv("DATABASE_URL")
-#     conn = psycopg2.connect(DATABASE_URL)
-#     cursor = conn.cursor()
-#     cursor.execute('''
-#         CREATE TABLE IF NOT EXISTS feedback (
-#             id SERIAL PRIMARY KEY,
-#             feedback_text TEXT NOT NULL,
-#             timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-#             user_ip TEXT
-#         )
-#     ''')
-#     conn.commit()
-#     conn.close()
-    
-# init_db()
-
-# @app.post("/feedback")
-# async def submit_feedback(request: Request):
-#   DATABASE_URL = os.getenv("DATABASE_URL")
-#   data = await request.json()
-#   feedback_text = data.get("feedback")
-  
-#   if not feedback_text:
-#     return {"error": "Feedback cannot be empty"}
-  
-#   try:
-#     conn = psycopg2.connect(DATABASE_URL)
-#     cursor = conn.cursor()
-#     cursor.execute("INSERT INTO feedback (feedback_text, user_ip) VALUES (%s, %s)",
-#                    (feedback_text, request.client.host)
-#                    )
-#     conn.commit()
-#     conn.close()
-#     return {"success": True, "message": "Feedback received successfully"}
-#   except Exception as e:
-#     return {"error": f"failed to save feedback: {str(e)}"}
-  
-  
-  
-# @app.get("/admin/feedback")
-# async def get_feedback():
-#     DATABASE_URL = os.getenv("DATABASE_URL")
-#     try:
-#         conn = psycopg2.connect(DATABASE_URL)
-#         cursor = conn.cursor(cursor_factory=RealDictCursor)
-#         cursor.execute("SELECT * FROM feedback ORDER BY timestamp DESC")
-#         rows = cursor.fetchall()
-#         conn.close()
-        
-#         feedback_list = [dict(row) for row in rows]
-#         return {"feedback": feedback_list}
-#     except Exception as e:
-#         return {"error": str(e)}
-    
 
 
 @app.post("/generate")
