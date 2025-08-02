@@ -1,4 +1,6 @@
 import React from "react";
+import { Link } from 'react-router-dom';
+
 
 function Basics(){
 return (
@@ -71,7 +73,8 @@ return (
                 <strong>Tuition & Fees:</strong> The cost of classes and enrollment.
             </li>
             <li>
-                <strong>Financial Aid:</strong> Includes grants, scholarships, work-study, and loans. <a href="/scholarship" className="text-blue-600 underline">See our Scholarship page for more info!</a>
+                <strong>Financial Aid:</strong> Includes grants, scholarships, work-study, and loans. <Link to="/scholarship" className="text-blue-600 underline">See our Scholarship page for more info!</Link>
+            {/* <Link to="/scholarships" className="text-blue-600 underline">See our Scholarship page for more info!</Link> */}
             </li>
             <li>
                 <strong>Living Expenses:</strong> Housing, food, books, transportation, and personal costs.
@@ -93,7 +96,7 @@ return (
             <strong>Need more help?</strong> Check out our other pages for guidance on applications, scholarships, essays, and more!
         </div>
 
-        
+
     </main>
 );
 

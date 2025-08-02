@@ -1,6 +1,8 @@
 import React from 'react';
 import Feedback from './Feedback';
 import Basics from './Basicinfo';
+import { Link } from 'react-router-dom';
+
 
 function About() {
   return (
@@ -15,15 +17,15 @@ function About() {
           </p>
           
           <div className="grid md:grid-cols-3 gap-8 mb-16">
-            <a href="/roadmap" className=" text-black text-center p-6 bg-gray-50 rounded-lg transition-transform hover:scale-105">
+            <Link to="/roadmap" className=" text-black text-center p-6 bg-gray-50 rounded-lg transition-transform hover:scale-105">
               <h3 className="text-xl font-semibold mb-3">Personalized Planning</h3>
               <p className="text-gray-600">Get customized roadmaps based on your goals, interests, and circumstances.</p>
-            </a>
+            </Link>
             
-            <a href="/basicInfo" className="text-black text-center p-6 bg-gray-50 rounded-lg transition-transform hover:scale-105">
+            <Link to="/basicInfo" className="text-black text-center p-6 bg-gray-50 rounded-lg transition-transform hover:scale-105">
               <h3 className="text-xl font-semibold mb-3">First-Gen Focused</h3>
               <p className="text-gray-600">Specifically designed to address the unique challenges faced by first-generation college students.</p>
-            </a>
+            </Link>
             
             <div className="text-center p-6 bg-gray-50 rounded-lg transition-transform hover:scale-105">
               <h3 className="text-xl font-semibold mb-3">Comprehensive Support</h3>
@@ -31,10 +33,10 @@ function About() {
             </div>
 
             <div className="md:col-span-3 flex justify-center">
-              <a href="/scholarship" className="text-black text-center p-6 bg-gray-50 rounded-lg transition-transform hover:scale-105">
+              <Link to="/scholarship" className="text-black text-center p-6 bg-gray-50 rounded-lg transition-transform hover:scale-105">
                 <h3 className="text-xl font-semibold mb-3">Scholarship Support</h3>
                 <p className="text-gray-600">Access to a scholarship database that will help you pay for school.</p>
-              </a>
+              </Link>
             </div>
           </div>
 
