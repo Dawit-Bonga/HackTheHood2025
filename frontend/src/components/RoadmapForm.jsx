@@ -9,22 +9,100 @@ function RoadmapForm({ setRoadmap, setLoading }) {
   const [testing, setTesting] = useState('');
   const [collegeGoals, setCollegeGoals] = useState(''); 
   const [classes, setClasses] = useState('');
+  const [error, setError] = useState('');
+  const [retryCount, setRetryCount] = useState(0);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    const res = await fetch(`${import.meta.env.VITE_BACKEND}/generate`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ gpa, grade, interests, activities, demographic, testing, collegeGoals, classes })
-    });
-    const data = await res.json();
-    setRoadmap(data.roadmap);
-    setLoading(false);
+    setError('');
+    
+    try {
+      const response = await fetch(`${import.meta.env.VITE_BACKEND}/generate`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ gpa, grade, interests, activities, demographic, testing, collegeGoals, classes })
+      });
+
+      if (!response.ok) {
+        throw new Error(`Server error: ${response.status} ${response.statusText}`);
+      }
+
+      const data = await response.json();
+      
+      if (!data.roadmap) {
+        throw new Error('No roadmap data received from server');
+      }
+      
+      setRoadmap(data.roadmap);
+      setRetryCount(0); // Reset retry count on success
+    } catch (err) {
+      console.error('Roadmap generation error:', err);
+      
+      let errorMessage = 'Failed to generate roadmap. ';
+      
+      if (err.name === 'TypeError' && err.message.includes('fetch')) {
+        errorMessage += 'Unable to connect to the server. Please check your internet connection.';
+      } else if (err.message.includes('Server error: 500')) {
+        errorMessage += 'Server is temporarily unavailable. Please try again later.';
+      } else if (err.message.includes('Server error: 400')) {
+        errorMessage += 'Invalid input data. Please check your form entries.';
+      } else if (err.message.includes('Server error: 429')) {
+        errorMessage += 'Too many requests. Please wait a moment before trying again.';
+      } else {
+        errorMessage += err.message || 'An unexpected error occurred.';
+      }
+      
+      setError(errorMessage);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleRetry = () => {
+    setRetryCount(prev => prev + 1);
+    setError('');
+    handleSubmit(new Event('submit'));
   };
 
   return (
-    <form className="roadmap-form" onSubmit={handleSubmit}>
+    <div>
+      {error && (
+        <div className="error-container mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
+          <div className="flex items-start">
+            <div className="flex-shrink-0">
+              <svg className="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
+                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+              </svg>
+            </div>
+            <div className="ml-3 flex-1">
+              <h3 className="text-sm font-medium text-red-800">Error generating roadmap</h3>
+              <div className="mt-2 text-sm text-red-700">
+                <p>{error}</p>
+              </div>
+              <div className="mt-4 flex space-x-3">
+                <button
+                  type="button"
+                  onClick={handleRetry}
+                  disabled={retryCount >= 3}
+                  className="bg-red-100 text-red-800 px-3 py-2 rounded-md text-sm font-medium hover:bg-red-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {retryCount >= 3 ? 'Max retries reached' : `Retry (${retryCount}/3)`}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setError('')}
+                  className="bg-gray-100 text-gray-800 px-3 py-2 rounded-md text-sm font-medium hover:bg-gray-200"
+                >
+                  Dismiss
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+      
+      <form className="roadmap-form" onSubmit={handleSubmit}>
       <div className="form-group">
         <label className="form-label" htmlFor='grade'>Grade Level:</label>
         <select
@@ -131,7 +209,8 @@ Please specify the score so if your score is SAT say {score} SAT, etc."
       </div>
 
       <button className="form-button" type="submit">Generate Roadmap</button>
-    </form>
+      </form>
+    </div>
   );
 }
 

@@ -47,19 +47,19 @@ function About() {
           <div className="bg-blue-50 p-8 rounded-lg mb-12 ">
             <h3 className="text-2xl font-semibold mb-4 text-center">Mission</h3>
             <p className="text-gray-700 text-center max-w-3xl mx-auto">
-              We believe every student should have a shot at college and we are working towards that reality.
+              I believe every student should have a shot at college and am are working towards that reality.
             </p>
           </div>
           </div>
 
-    <div className="flex flex-col items-center my-8">
+    {/* <div className="flex flex-col items-center my-8">
         <img 
            src="IMG_8123.jpg" 
           alt="About us" 
          className="rounded-xl shadow-lg max-w-xs border border-gray-200 mb-4 transition-transform hover:scale-105"
          />
         <p className="text-gray-700 text-lg font-medium">The handsome men behind the app</p>
-    </div>
+    </div> */}
 
         </div>
 
