@@ -1,4 +1,8 @@
 import React, { useState } from 'react';
+import { useAuth } from '../context/AuthContext';
+import Button from './ui/Button';
+import Card from './ui/Card';
+import { Input, Textarea, Select } from './ui/Input';
 
 function RoadmapForm({ setRoadmap, setLoading }) {
   const [gpa, setGpa] = useState('');
@@ -11,6 +15,7 @@ function RoadmapForm({ setRoadmap, setLoading }) {
   const [classes, setClasses] = useState('');
   const [error, setError] = useState('');
   const [retryCount, setRetryCount] = useState(0);
+  const { getToken } = useAuth();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -18,9 +23,13 @@ function RoadmapForm({ setRoadmap, setLoading }) {
     setError('');
     
     try {
+      const token = await getToken();
       const response = await fetch(`${import.meta.env.VITE_BACKEND}/generate`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
         body: JSON.stringify({ gpa, grade, interests, activities, demographic, testing, collegeGoals, classes })
       });
 
@@ -35,7 +44,7 @@ function RoadmapForm({ setRoadmap, setLoading }) {
       }
       
       setRoadmap(data.roadmap);
-      setRetryCount(0); // Reset retry count on success
+      setRetryCount(0);
     } catch (err) {
       console.error('Roadmap generation error:', err);
       
@@ -66,150 +75,152 @@ function RoadmapForm({ setRoadmap, setLoading }) {
   };
 
   return (
-    <div>
+    <div className="max-w-3xl mx-auto">
       {error && (
-        <div className="error-container mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
-          <div className="flex items-start">
-            <div className="flex-shrink-0">
-              <svg className="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
-                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
-              </svg>
-            </div>
-            <div className="ml-3 flex-1">
-              <h3 className="text-sm font-medium text-red-800">Error generating roadmap</h3>
-              <div className="mt-2 text-sm text-red-700">
-                <p>{error}</p>
-              </div>
-              <div className="mt-4 flex space-x-3">
-                <button
-                  type="button"
+        <Card variant="default" padding="default" className="mb-6 bg-red-50 border-red-200">
+          <div className="flex items-start gap-3">
+            <svg className="w-5 h-5 text-red-500 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+              <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+            </svg>
+            <div className="flex-1">
+              <h4 className="text-sm font-semibold text-red-800 mb-1">Error generating roadmap</h4>
+              <p className="text-sm text-red-700 mb-3">{error}</p>
+              <div className="flex gap-3">
+                <Button
+                  variant="outline"
+                  size="sm"
                   onClick={handleRetry}
                   disabled={retryCount >= 3}
-                  className="bg-red-100 text-red-800 px-3 py-2 rounded-md text-sm font-medium hover:bg-red-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="border-red-300 text-red-700 hover:bg-red-100"
                 >
                   {retryCount >= 3 ? 'Max retries reached' : `Retry (${retryCount}/3)`}
-                </button>
-                <button
-                  type="button"
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="sm"
                   onClick={() => setError('')}
-                  className="bg-gray-100 text-gray-800 px-3 py-2 rounded-md text-sm font-medium hover:bg-gray-200"
+                  className="text-red-700 hover:bg-red-100"
                 >
                   Dismiss
-                </button>
+                </Button>
               </div>
             </div>
           </div>
-        </div>
+        </Card>
       )}
       
-      <form className="roadmap-form" onSubmit={handleSubmit}>
-      <div className="form-group">
-        <label className="form-label" htmlFor='grade'>Grade Level:</label>
-        <select
-          className="form-select"
-          id='grade'
-          value={grade}
-          onChange={(e) => setGrade(e.target.value)}
-          required
-        >
-          <option value="">--Select a Grade--</option>
-          <option value="9">9th</option>
-          <option value="10">10th</option>
-          <option value="11">11th</option>
-          <option value="12">12th</option>
-          <option value="Community college">Community College</option>
-          <option value="other">Out of school, looking to get back in</option>
-        </select>
-      </div>
+      <Card variant="elevated" padding="lg">
+        <div className="mb-8">
+          <h2 className="text-2xl font-bold text-[var(--color-text-primary)] mb-2">
+            Generate Your College Roadmap
+          </h2>
+          <p className="text-[var(--color-text-secondary)]">
+            Share your information to receive a personalized college preparation plan
+          </p>
+        </div>
 
-      <div className="form-group">
-        <label className="form-label" htmlFor="gpa">GPA:</label>
-        <input
-          className="form-input"
-          type="number"
-          id="gpa"
-          value={gpa}
-          onChange={(e) => setGpa(e.target.value)}
-          step="0.01"
-          min="0"
-          max="4"
-          placeholder="e.g., 3.5"
-          required
-        />
-      </div>
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <Select
+            label="Grade Level"
+            value={grade}
+            onChange={(e) => setGrade(e.target.value)}
+            required
+            helperText="Your current academic year"
+          >
+            <option value="">Select your grade</option>
+            <option value="9">9th Grade</option>
+            <option value="10">10th Grade</option>
+            <option value="11">11th Grade</option>
+            <option value="12">12th Grade</option>
+            <option value="Community college">Community College</option>
+            <option value="other">Out of school, looking to get back in</option>
+          </Select>
 
-        <div className="form-group">
-        <label className="form-label" htmlFor="classes">Course Rigor:</label>
-        <textarea
-          className="form-textarea"
-          id="classes"
-          value={classes}
-          onChange={(e) => setClasses(e.target.value)}
-          placeholder="e.g. I have taken 7/11 AP classes, We have no AP or Honors Classes.Also feel free to drop your upcoming schedule"
-          required
-        />
-      </div>
+          <Input
+            label="GPA"
+            type="number"
+            value={gpa}
+            onChange={(e) => setGpa(e.target.value)}
+            step="0.01"
+            min="0"
+            max="4"
+            placeholder="e.g., 3.5"
+            helperText="Your current grade point average (0.0-4.0 scale)"
+            required
+          />
 
-      <div className="form-group">
-        <label className="form-label" htmlFor="interests">Interests / Goals:</label>
-        <textarea
-          className="form-textarea"
-          id="interests"
-          value={interests}
-          onChange={(e) => setInterests(e.target.value)}
-          placeholder="e.g., computer science, medicine, social justice"
-          required
-        />
-      </div>
+          <Textarea
+            label="Course Rigor"
+            value={classes}
+            onChange={(e) => setClasses(e.target.value)}
+            placeholder="e.g., I have taken 7/11 AP classes, We have no AP or Honors Classes. Also feel free to drop your upcoming schedule"
+            helperText="Describe the difficulty of your classes and any advanced courses"
+            rows={3}
+            required
+          />
 
-      <div className="form-group">
-        <label className="form-label" htmlFor="activities">Activities/Extracurriculars:</label>
-        <textarea
-          className="form-textarea"
-          id="activities"
-          value={activities}
-          onChange={(e) => setActivities(e.target.value)}
-          placeholder="e.g., debate, HackClub, Research, please try to be specific"
-          required
-        />
-      </div>
+          <Textarea
+            label="Interests & Goals"
+            value={interests}
+            onChange={(e) => setInterests(e.target.value)}
+            placeholder="e.g., computer science, medicine, social justice"
+            helperText="What are you passionate about? What do you want to study?"
+            rows={3}
+            required
+          />
 
-      <div className="form-group">
-        <label className="form-label" htmlFor="demographic">Demographic Information:</label>
-        <textarea
-          className="form-textarea"
-          id="demographic"
-          value={demographic}
-          onChange={(e) => setDemographic(e.target.value)}
-          placeholder="e.g., first-generation college student, low-income, rural area, underrepresented minority"
-        />
-      </div>
+          <Textarea
+            label="Activities & Extracurriculars"
+            value={activities}
+            onChange={(e) => setActivities(e.target.value)}
+            placeholder="e.g., debate, HackClub, Research - please try to be specific"
+            helperText="List your clubs, sports, volunteer work, jobs, etc."
+            rows={3}
+            required
+          />
 
-        <div className="form-group">
-        <label className="form-label" htmlFor="testing">Sat/Testing:</label>
-        <textarea
-          className="form-textarea"
-          id="testing"
-          value={testing}
-          onChange={(e) => setTesting(e.target.value)}
-          placeholder="e.g., 1330 SAT, haven't taken the SAT yet, plan on taking it soon aiming for...
-Please specify the score so if your score is SAT say {score} SAT, etc."
-        />
-      </div>
+          <Textarea
+            label="Demographic Information"
+            value={demographic}
+            onChange={(e) => setDemographic(e.target.value)}
+            placeholder="e.g., first-generation college student, low-income, rural area, underrepresented minority"
+            helperText="Optional: Help us tailor advice to your unique circumstances"
+            rows={2}
+          />
 
-        <div className="form-group">
-        <label className="form-label" htmlFor="collegeGoals">College Goals:</label>
-        <textarea
-          className="form-textarea"
-          id="collegeGoals"
-          value={collegeGoals}
-          onChange={(e) => setCollegeGoals(e.target.value)}
-          placeholder="e.g., Ivy League, state schools, specific universities, community college transfer, gap year plans"
-        />
-      </div>
+          <Textarea
+            label="SAT/Testing"
+            value={testing}
+            onChange={(e) => setTesting(e.target.value)}
+            placeholder="e.g., 1330 SAT, haven't taken the SAT yet, plan on taking it soon aiming for..."
+            helperText="Current scores or testing plans (SAT, ACT, AP exams, etc.)"
+            rows={2}
+          />
 
-      <button className="form-button" type="submit">Generate Roadmap</button>
-      </form>
+          <Textarea
+            label="College Goals"
+            value={collegeGoals}
+            onChange={(e) => setCollegeGoals(e.target.value)}
+            placeholder="e.g., Ivy League, state schools, specific universities, community college transfer, gap year plans"
+            helperText="What type of colleges are you interested in?"
+            rows={3}
+          />
+
+          <div className="pt-4">
+            <Button
+              type="submit"
+              variant="primary"
+              size="lg"
+              fullWidth
+            >
+              Generate My Roadmap
+              <svg className="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+              </svg>
+            </Button>
+          </div>
+        </form>
+      </Card>
     </div>
   );
 }

@@ -1,11 +1,13 @@
 ## Roadmap Gen
 
-Full‑stack app for generating personalized high‑school roadmaps and essay feedback.
+Full‑stack app for generating personalized high‑school roadmaps and essay feedback with user authentication.
 
 ### Stack
 
-- **Backend**: FastAPI, Uvicorn, OpenAI API
+- **Backend**: FastAPI, Uvicorn, OpenAI API, Supabase
 - **Frontend**: React + Vite, Tailwind CSS
+- **Database**: Supabase (PostgreSQL)
+- **Auth**: Supabase Authentication
 
 ---
 
@@ -14,6 +16,19 @@ Full‑stack app for generating personalized high‑school roadmaps and essay fe
 - Node.js 18+ and npm
 - Python 3.9+
 - OpenAI API key
+- Supabase account (free tier works!)
+
+---
+
+## 🆕 Authentication Setup
+
+This app now includes user authentication! See [SUPABASE_SETUP.md](./SUPABASE_SETUP.md) for complete setup instructions.
+
+**Quick setup:**
+
+1. Create a Supabase project at [supabase.com](https://supabase.com)
+2. Run the SQL schema from `SUPABASE_SETUP.md`
+3. Add Supabase credentials to your `.env` files
 
 ---
 
@@ -25,12 +40,16 @@ Create two env files:
 
 ```
 OPEN_AI_KEY=your_openai_api_key
+SUPABASE_URL=https://your-project.supabase.co
+SUPABASE_SERVICE_KEY=your_service_role_secret_key
 ```
 
 - Frontend `frontend/.env`
 
 ```
 VITE_BACKEND=http://localhost:8000
+VITE_SUPABASE_URL=https://your-project.supabase.co
+VITE_SUPABASE_ANON_KEY=your_anon_public_key
 ```
 
 Note: The backend currently allows CORS from `http://localhost:5177`. Either run Vite on port 5177 (recommended below) or add `http://localhost:5173` to the allowed origins in `backend/main.py`.
@@ -77,9 +96,12 @@ npm run build
 
 Base URL (local): `http://localhost:8000`
 
+**Note**: All endpoints below require authentication. Include `Authorization: Bearer <token>` header.
+
 - POST `/generate`
 
-  - Description: Generate a personalized roadmap
+  - Description: Generate a personalized roadmap (requires auth)
+  - Headers: `Authorization: Bearer <supabase-jwt-token>`
   - Body (JSON):
     ```json
     {
@@ -96,7 +118,9 @@ Base URL (local): `http://localhost:8000`
   - Response: `{ "roadmap": string }`
 
 - POST `/essay`
-  - Description: Get supportive, constructive essay feedback
+
+  - Description: Get supportive, constructive essay feedback (requires auth)
+  - Headers: `Authorization: Bearer <supabase-jwt-token>`
   - Body (JSON):
     ```json
     {
@@ -106,9 +130,18 @@ Base URL (local): `http://localhost:8000`
       "program": "UC PIQ / Common App"
     }
     ```
-  - Response: `{ "feedback": string }`
+  - Response: `{ "feedback": string, "id": string }`
 
-Note: Frontend refers to a `/feedback` endpoint for storing feedback; this route is not currently implemented in the backend.
+- GET `/roadmaps`
+
+  - Description: Get all saved roadmaps for authenticated user
+  - Headers: `Authorization: Bearer <supabase-jwt-token>`
+  - Response: `{ "roadmaps": array }`
+
+- GET `/essays`
+  - Description: Get all saved essays for authenticated user
+  - Headers: `Authorization: Bearer <supabase-jwt-token>`
+  - Response: `{ "essays": array }`
 
 ---
 

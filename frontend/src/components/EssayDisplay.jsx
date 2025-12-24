@@ -1,19 +1,25 @@
-import Feedback from "./Feedback";
+import Card from "./ui/Card";
 
 function EssayDisplay({ essay, loading }) {
   if (loading) {
     return (
-      <div className="loading-container text-center py-12">
-        <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600 mb-4"></div>
-        <h3 className="text-xl font-semibold text-gray-800 mb-2">Analyzing Your Essay</h3>
-        <p className="text-gray-600 mb-4">
-          Our AI is reviewing your essay and providing detailed feedback...
-        </p>
-        <div className="flex justify-center items-center space-x-2 text-sm text-gray-500">
-          <div className="animate-pulse">●</div>
-          <div className="animate-pulse" style={{ animationDelay: '0.2s' }}>●</div>
-          <div className="animate-pulse" style={{ animationDelay: '0.4s' }}>●</div>
-        </div>
+      <div className="max-w-3xl mx-auto">
+        <Card variant="elevated" padding="lg">
+          <div className="text-center py-12">
+            <div className="inline-block animate-spin rounded-full h-16 w-16 border-4 border-[var(--color-border)] border-t-[var(--color-primary)] mb-6"></div>
+            <h3 className="text-2xl font-semibold text-[var(--color-text-primary)] mb-3">
+              Analyzing Your Essay
+            </h3>
+            <p className="text-[var(--color-text-secondary)] mb-6">
+              Our AI is carefully reviewing your essay and preparing comprehensive feedback...
+            </p>
+            <div className="flex justify-center items-center space-x-2 text-[var(--color-primary)]">
+              <div className="w-2 h-2 rounded-full bg-current animate-pulse"></div>
+              <div className="w-2 h-2 rounded-full bg-current animate-pulse" style={{ animationDelay: '0.2s' }}></div>
+              <div className="w-2 h-2 rounded-full bg-current animate-pulse" style={{ animationDelay: '0.4s' }}></div>
+            </div>
+          </div>
+        </Card>
       </div>
     );
   }
@@ -21,9 +27,42 @@ function EssayDisplay({ essay, loading }) {
   if (!essay) return null;
 
   return (
-    <div className="roadmap-display roadmap-fadeIn">
-      <h2>Your Essay Feedback:</h2>
-      <pre className="roadmap-content">{essay}</pre>
+    <div className="max-w-3xl mx-auto animate-[slideUp_0.5s_ease-out]">
+      <Card variant="elevated" padding="lg">
+        <div className="mb-6 flex items-center gap-3">
+          <div className="w-10 h-10 bg-[var(--color-primary-light)] rounded-lg flex items-center justify-center">
+            <svg className="w-6 h-6 text-[var(--color-primary)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+          </div>
+          <div>
+            <h2 className="text-2xl font-bold text-[var(--color-text-primary)]">
+              Your Essay Feedback
+            </h2>
+            <p className="text-sm text-[var(--color-text-secondary)]">
+              Detailed analysis and suggestions for improvement
+            </p>
+          </div>
+        </div>
+        
+        <div className="essay-result">
+          <pre className="bg-[var(--color-bg-secondary)] border border-[var(--color-border)] rounded-lg p-6 overflow-x-auto text-sm leading-relaxed text-[var(--color-text-primary)] whitespace-pre-wrap max-h-[600px] overflow-y-auto">
+            {essay}
+          </pre>
+        </div>
+        
+        <div className="mt-6 p-4 bg-[var(--color-primary-light)] rounded-lg">
+          <div className="flex items-start gap-3">
+            <svg className="w-5 h-5 text-[var(--color-primary)] flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+              <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+            </svg>
+            <div className="text-sm text-[var(--color-primary)]">
+              <strong className="font-semibold">Remember:</strong> This feedback is a guide to help you improve. 
+              Make sure to maintain your authentic voice and personal story throughout your revisions.
+            </div>
+          </div>
+        </div>
+      </Card>
     </div>
   );
 }

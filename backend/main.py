@@ -1,9 +1,10 @@
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, Request, Depends, HTTPException, status
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from openai import OpenAI
 import os
 from dotenv import load_dotenv
-
+from supabase import create_client, Client
 from datetime import datetime
 
 load_dotenv()
@@ -11,22 +12,40 @@ load_dotenv()
 open_ai_key = os.getenv("OPEN_AI_KEY")
 client = OpenAI(api_key=open_ai_key)
 
+# Supabase setup
+supabase_url = os.getenv("SUPABASE_URL")
+supabase_key = os.getenv("SUPABASE_SERVICE_KEY")
+supabase: Client = create_client(supabase_url, supabase_key)
+
 app = FastAPI()
+security = HTTPBearer()
 
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
-        "http://localhost:5177",
+        "http://localhost:5173",
         "https://hack-the-hood2025.vercel.app"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
+# Verify Supabase JWT token
+async def get_current_user(credentials: HTTPAuthorizationCredentials = Depends(security)):
+    token = credentials.credentials
+    try:
+        user = supabase.auth.get_user(token)
+        return user.user
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid authentication credentials"
+        )
+
 
 
 @app.post("/generate")
-async def generate_roadmap(request: Request):
+async def generate_roadmap(request: Request, current_user = Depends(get_current_user)):
     data = await request.json()
     gpa = data.get("gpa")
     grade = data.get("grade")
@@ -117,13 +136,34 @@ async def generate_roadmap(request: Request):
             # max_tokens=2300
         )
         roadmap = response.choices[0].message.content
-        return {"roadmap": roadmap}
+        
+        # Save roadmap to Supabase
+        try:
+            result = supabase.table('roadmaps').insert({
+                'user_id': str(current_user.id),
+                'gpa': gpa,
+                'grade': grade,
+                'interests': interests,
+                'activities': activities,
+                'demographics': demographic,
+                'testing': testing,
+                'college_goals': goals,
+                'classes': classes,
+                'roadmap_content': roadmap
+            }).execute()
+            
+            return {"roadmap": roadmap, "id": result.data[0]['id']}
+        except Exception as db_error:
+            # Still return roadmap even if save fails
+            print(f"Database error: {str(db_error)}")
+            return {"roadmap": roadmap, "warning": "Roadmap generated but not saved"}
+            
     except Exception as e:
         return {"error": str(e)}
       
       
 @app.post("/essay")
-async def grade_essay(request: Request):
+async def grade_essay(request: Request, current_user = Depends(get_current_user)):
     data = await request.json()
     grade = data.get("grade")
     prompt = data.get("prompt")
@@ -178,8 +218,41 @@ Also make sure to say this advice is to be taken with a grain of salt because yo
             # max_tokens=2300
         )
         feedback = response.choices[0].message.content
-        return {"feedback": feedback}
+        
+        # Save essay feedback to Supabase
+        try:
+            result = supabase.table('essays').insert({
+                'user_id': str(current_user.id),
+                'grade': grade,
+                'prompt': data.get("prompt"),
+                'essay_text': essay,
+                'program': program,
+                'feedback': feedback
+            }).execute()
+            
+            return {"feedback": feedback, "id": result.data[0]['id']}
+        except Exception as db_error:
+            # Still return feedback even if save fails
+            print(f"Database error: {str(db_error)}")
+            return {"feedback": feedback, "warning": "Feedback generated but not saved"}
+            
     except Exception as e:
         return {"error": str(e)}
-  
-   
+
+# Get user's saved roadmaps
+@app.get("/roadmaps")
+async def get_roadmaps(current_user = Depends(get_current_user)):
+    try:
+        result = supabase.table('roadmaps').select('*').eq('user_id', str(current_user.id)).order('created_at', desc=True).execute()
+        return {"roadmaps": result.data}
+    except Exception as e:
+        return {"error": str(e)}
+
+# Get user's saved essays
+@app.get("/essays")
+async def get_essays(current_user = Depends(get_current_user)):
+    try:
+        result = supabase.table('essays').select('*').eq('user_id', str(current_user.id)).order('created_at', desc=True).execute()
+        return {"essays": result.data}
+    except Exception as e:
+        return {"error": str(e)}

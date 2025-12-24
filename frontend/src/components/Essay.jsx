@@ -1,13 +1,18 @@
 import React, { useState } from 'react';
 import EssayDisplay from './EssayDisplay';
+import { useAuth } from '../context/AuthContext';
+import Button from './ui/Button';
+import Card from './ui/Card';
+import { Textarea, Select } from './ui/Input';
 
 function EssayForm({ setEssayFeedback, setLoading }) {
-    const [prompt, setPrompt] = useState('')
-    const [program, setProgram] = useState('')
-    const [grade, setGrade] = useState('')
-    const [essay, setEssay] = useState('')
-    const [error, setError] = useState('')
-    const [retryCount, setRetryCount] = useState(0)
+    const [prompt, setPrompt] = useState('');
+    const [program, setProgram] = useState('');
+    const [grade, setGrade] = useState('');
+    const [essay, setEssay] = useState('');
+    const [error, setError] = useState('');
+    const [retryCount, setRetryCount] = useState(0);
+    const { getToken } = useAuth();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -15,9 +20,13 @@ function EssayForm({ setEssayFeedback, setLoading }) {
         setError('');
         
         try {
+            const token = await getToken();
             const response = await fetch(`${import.meta.env.VITE_BACKEND}/essay`, {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: { 
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
                 body: JSON.stringify({ prompt, grade, program, essay })
             });
 
@@ -32,7 +41,7 @@ function EssayForm({ setEssayFeedback, setLoading }) {
             }
             
             setEssayFeedback(data.feedback);
-            setRetryCount(0); // Reset retry count on success
+            setRetryCount(0);
         } catch (err) {
             console.error('Essay feedback error:', err);
             
@@ -63,113 +72,109 @@ function EssayForm({ setEssayFeedback, setLoading }) {
     };
 
     return (
-        <div>
+        <div className="max-w-3xl mx-auto">
             {error && (
-                <div className="error-container mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
-                    <div className="flex items-start">
-                        <div className="flex-shrink-0">
-                            <svg className="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
-                                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
-                            </svg>
-                        </div>
-                        <div className="ml-3 flex-1">
-                            <h3 className="text-sm font-medium text-red-800">Error getting essay feedback</h3>
-                            <div className="mt-2 text-sm text-red-700">
-                                <p>{error}</p>
-                            </div>
-                            <div className="mt-4 flex space-x-3">
-                                <button
-                                    type="button"
+                <Card variant="default" padding="default" className="mb-6 bg-red-50 border-red-200">
+                    <div className="flex items-start gap-3">
+                        <svg className="w-5 h-5 text-red-500 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                            <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+                        </svg>
+                        <div className="flex-1">
+                            <h4 className="text-sm font-semibold text-red-800 mb-1">Error getting essay feedback</h4>
+                            <p className="text-sm text-red-700 mb-3">{error}</p>
+                            <div className="flex gap-3">
+                                <Button
+                                    variant="outline"
+                                    size="sm"
                                     onClick={handleRetry}
                                     disabled={retryCount >= 3}
-                                    className="bg-red-100 text-red-800 px-3 py-2 rounded-md text-sm font-medium hover:bg-red-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                                    className="border-red-300 text-red-700 hover:bg-red-100"
                                 >
                                     {retryCount >= 3 ? 'Max retries reached' : `Retry (${retryCount}/3)`}
-                                </button>
-                                <button
-                                    type="button"
+                                </Button>
+                                <Button
+                                    variant="ghost"
+                                    size="sm"
                                     onClick={() => setError('')}
-                                    className="bg-gray-100 text-gray-800 px-3 py-2 rounded-md text-sm font-medium hover:bg-gray-200"
+                                    className="text-red-700 hover:bg-red-100"
                                 >
                                     Dismiss
-                                </button>
+                                </Button>
                             </div>
                         </div>
                     </div>
-                </div>
+                </Card>
             )}
             
-            <form className="roadmap-form" onSubmit={handleSubmit}>
-            <div className="form-group">
-                <label className="form-label" htmlFor='grade'>Grade Level:</label>
-                <select
-                    className="form-select"
-                    id='grade'
-                    value={grade}
-                    onChange={(e) => setGrade(e.target.value)}
-                    required
-                >
-                    <option value="">--Select a Grade--</option>
-                    <option value="9">9th</option>
-                    <option value="10">10th</option>
-                    <option value="11">11th</option>
-                    <option value="12">12th</option>
-                </select>
-            </div>
+            <Card variant="elevated" padding="lg">
+                <div className="mb-8">
+                    <h2 className="text-2xl font-bold text-[var(--color-text-primary)] mb-2">
+                        Essay Feedback & Grading
+                    </h2>
+                    <p className="text-[var(--color-text-secondary)]">
+                        Get AI-powered feedback on your college essays to improve clarity, impact, and effectiveness
+                    </p>
+                </div>
 
-            {/* <div className="form-group">
-                <label className="form-label" htmlFor="gpa">GPA:</label>
-                <input
-                    className="form-input"
-                    type="text"
-                    id="gpa"
-                    value={gpa}
-                    onChange={(e) => setGpa(e.target.value)}
-                    step="0.01"
-                    min="0"
-                    max="4"
-                    placeholder="e.g., 3.5"
-                    required
-                />
-            </div> */}
+                <form onSubmit={handleSubmit} className="space-y-6">
+                    <Select
+                        label="Grade Level"
+                        value={grade}
+                        onChange={(e) => setGrade(e.target.value)}
+                        required
+                    >
+                        <option value="">Select your grade</option>
+                        <option value="9">9th Grade</option>
+                        <option value="10">10th Grade</option>
+                        <option value="11">11th Grade</option>
+                        <option value="12">12th Grade</option>
+                    </Select>
 
-            <div className="form-group">
-                <label className="form-label" htmlFor="prompt">Enter your prompt:</label>
-                <textarea
-                    className="form-textarea"
-                    id="prompt"
-                    value={prompt}
-                    onChange={(e) => setPrompt(e.target.value)}
-                    placeholder="Please enter the prompt and put the word limit"
-                    required
-                />
-            </div>
+                    <Textarea
+                        label="Essay Prompt"
+                        value={prompt}
+                        onChange={(e) => setPrompt(e.target.value)}
+                        placeholder="e.g., Describe a challenge you've overcome (500 words max)"
+                        helperText="Include the prompt and word limit if applicable"
+                        rows={3}
+                        required
+                    />
 
-            <div className="form-group">
-                <label className="form-label" htmlFor="program">Program/School:</label>
-                <textarea
-                    className="form-textarea"
-                    id="program"
-                    value={program}
-                    onChange={(e) => setProgram(e.target.value)}
-                    placeholder="Please put the program or school that you are applying to."
-                    required
-                />
-            </div>
+                    <Textarea
+                        label="Program / School"
+                        value={program}
+                        onChange={(e) => setProgram(e.target.value)}
+                        placeholder="e.g., University of California - Computer Science Program"
+                        helperText="Which program or school is this essay for?"
+                        rows={2}
+                        required
+                    />
 
-            <div className="form-group">
-                <label className="form-label" htmlFor="essay">Essay:</label>
-                <textarea
-                    className="form-textarea w-full h-64 p-3 border rounded-md"
-                    id="essay"
-                    value={essay}
-                    onChange={(e) => setEssay(e.target.value)}
-                    placeholder="Paste your essay here for feedback"
-                />
-            </div>
+                    <Textarea
+                        label="Your Essay"
+                        value={essay}
+                        onChange={(e) => setEssay(e.target.value)}
+                        placeholder="Paste your essay here for detailed feedback..."
+                        rows={12}
+                        helperText="Our AI will analyze your essay for clarity, structure, grammar, and impact"
+                        required
+                    />
 
-            <button className="w-full bg-purple-500 text-white py-3 rounded-xl hover:bg-sky-600 transition font-semibold tracking-wide text-lg" type="submit">Get Essay Feedback</button>
-            </form>
+                    <div className="pt-4">
+                        <Button
+                            type="submit"
+                            variant="primary"
+                            size="lg"
+                            fullWidth
+                        >
+                            Get Detailed Feedback
+                            <svg className="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
+                            </svg>
+                        </Button>
+                    </div>
+                </form>
+            </Card>
         </div>
     );
 }
@@ -179,10 +184,36 @@ function EssayPage() {
     const [loading, setLoading] = useState(false);
 
     return (
-        <main className="main-content">
-            <EssayForm setEssayFeedback={setEssayFeedback} setLoading={setLoading} />
-            <EssayDisplay essay={essayFeedback} loading={loading} />
-        </main>
+        <div className="bg-white min-h-screen">
+            <section className="section bg-gradient-to-b from-[var(--color-bg-secondary)] to-white">
+                <div className="container">
+                    <div className="text-center mb-12 max-w-3xl mx-auto">
+                        <div className="inline-flex items-center justify-center w-16 h-16 bg-[var(--color-primary-light)] rounded-full mb-6">
+                            <svg className="w-8 h-8 text-[var(--color-primary)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                            </svg>
+                        </div>
+                        <h1 className="text-4xl md:text-5xl font-bold text-[var(--color-text-primary)] mb-4">
+                            Essay Grader
+                        </h1>
+                        <p className="text-lg text-[var(--color-text-secondary)] leading-relaxed">
+                            Get instant, AI-powered feedback on your college essays. 
+                            Improve your writing and stand out in your applications.
+                        </p>
+                    </div>
+                    
+                    <EssayForm setEssayFeedback={setEssayFeedback} setLoading={setLoading} />
+                </div>
+            </section>
+            
+            {(loading || essayFeedback) && (
+                <section className="section">
+                    <div className="container">
+                        <EssayDisplay essay={essayFeedback} loading={loading} />
+                    </div>
+                </section>
+            )}
+        </div>
     );
 }
 

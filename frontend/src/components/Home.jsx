@@ -7,25 +7,32 @@ function Home() {
   const [loading, setLoading] = useState(false);
 
   return (
-    <main className="main-content">
-      <section className="hero-section">
-        <div className="hero-container">
-          {/* <h1>Generate Your College Roadmap</h1>
-          <p>Get personalized guidance for your college journey</p> */}
+    <div className="bg-white min-h-screen">
+      <section className="section bg-gradient-to-b from-[var(--color-bg-secondary)] to-white">
+        <div className="container">
+          <div className="text-center mb-12 max-w-3xl mx-auto">
+            <h1 className="text-4xl md:text-5xl font-bold text-[var(--color-text-primary)] mb-4">
+              Your Personalized College Roadmap
+            </h1>
+            <p className="text-lg text-[var(--color-text-secondary)] leading-relaxed">
+              Answer a few questions about yourself and we'll create a customized plan 
+              to help you succeed in your college journey.
+            </p>
+          </div>
+          
+          <RoadmapForm setRoadmap={setRoadmap} setLoading={setLoading} />
         </div>
       </section>
       
-      <section className="form-section">
-        <RoadmapForm setRoadmap={setRoadmap} setLoading={setLoading} />
-      </section>
-      
-      <section className="display-section">
-        <RoadmapDisplay roadmap={roadmap} loading={loading} />
-      </section>
-    </main>
+      {(loading || roadmap) && (
+        <section className="section">
+          <div className="container">
+            <RoadmapDisplay roadmap={roadmap} loading={loading} />
+          </div>
+        </section>
+      )}
+    </div>
   );
 }
-
-
 
 export default Home;
