@@ -281,7 +281,7 @@ function About() {
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link to="/basicInfo">
               <Button 
-                variant="secondary" 
+                variant="outline" 
                 size="lg" 
                 fullWidth 
                 className="sm:w-auto bg-white text-blue-700 font-semibold border-2 border-blue-600 hover:bg-blue-50 hover:border-blue-700"
