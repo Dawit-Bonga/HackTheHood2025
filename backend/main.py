@@ -1,16 +1,18 @@
 from fastapi import FastAPI, Request, Depends, HTTPException, status
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
-from openai import OpenAI
+from groq import Groq
 import os
 from dotenv import load_dotenv
 from supabase import create_client, Client
+import json
 from datetime import datetime
 
 load_dotenv()
 
-open_ai_key = os.getenv("OPEN_AI_KEY")
-client = OpenAI(api_key=open_ai_key)
+client = Groq(
+    api_key=os.environ.get("GROQ_API_KEY")
+)
 
 # Supabase setup
 supabase_url = os.getenv("SUPABASE_URL")
@@ -24,7 +26,10 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=[
         "http://localhost:5173",
-        "hack-the-hood2025.vercel.app"],
+        "http://localhost:5175",
+        "http://localhost:5176",
+        "http://localhost:5177",
+        "https://hack-the-hood2025.vercel.app"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -47,6 +52,8 @@ async def get_current_user(credentials: HTTPAuthorizationCredentials = Depends(s
 @app.post("/generate")
 async def generate_roadmap(request: Request, current_user = Depends(get_current_user)):
     data = await request.json()
+    
+    # Extract data
     gpa = data.get("gpa")
     grade = data.get("grade")
     interests = data.get("interests")
@@ -55,89 +62,119 @@ async def generate_roadmap(request: Request, current_user = Depends(get_current_
     testing = data.get("testing")
     goals = data.get("collegeGoals")
     classes = data.get("classes")
+    location = data.get("location")
     
-    example_timeline = """
-**May–August**
-- May–July: Your summer time. Many use this for programs, research, starting college essay drafts, jobs, etc.
-- Late July: QuestBridge application opens
-- August 1st: UC app opens
-- August 1st: Common App opens  
-  ○ This is where most people apply to college. You should at least fill out your personal info by the end of August.
-- Mid-late August: SAT
-
-**September**
-- Keep working on your main essays and try to finalize your college list.
-- ~September 26: QuestBridge application deadline  
-  ○ Submit by this deadline to be considered a finalist.
-- Ask teachers for letters of recommendation if you haven’t already
-- September ACT
-
-**October**
-- If applying early, finalize your main essay and start supplementals.
-- October 18th: QuestBridge finalists’ results released
-- Take the October SAT if needed
-- Keep working on UC applications
-
-**November**
-- November 1st:
-  ○ QuestBridge Match application is due
-  ○ Early Action/Decision apps due
-- Work on supplements for the schools you’re applying to
-  ○ Create templates for common questions like “Why Major” to save time
-- November 30 – Early December: UC applications due
-
-**December–January**
-- Dec 1st: QuestBridge Match results released  
-  ○ If not matched, apply Regular Decision or via Common App
-- Mid Dec–Jan: ED/EA results come out  
-  ○ If deferred, write a Letter of Continued Interest
-- Finish all college apps (many due early January)
-
-**January–March**
-- If new updates happen (awards, ECs), send them to colleges
-- March: Most decisions come out — stay positive and prepare for next steps
-- Enjoy the rest of senior year once applications are done
-"""
+    # 1. Get Current Date & Logic
+    now = datetime.now()
+    current_date_str = now.strftime("%B %Y")
     
+    # Determine timeline duration
+    if "9" in str(grade) or "freshman" in str(grade).lower():
+        duration_note = "Start NOW. Cover 9th and 10th grade in semesters, then 11th/12th in detail."
+    elif "10" in str(grade) or "sophomore" in str(grade).lower():
+        duration_note = "Start NOW. Cover the rest of 10th, all of 11th, and end at Jan of 12th Grade."
+    elif "11" in str(grade) or "junior" in str(grade).lower():
+        duration_note = "Start NOW. Cover 11th Spring/Summer and 12th Fall/Winter in detail."
+    else:
+        duration_note = "Start NOW. Focus on Senior Winter/Spring transition to college."
+
+    # 2. STRICT JSON SCHEMA
+    # We define this as a template the AI must fill
+    # 2. JSON SCHEMA
+    json_schema = """
+    {
+      "student_summary": "A warm, personalized paragraph summarizing their profile.",
+      "college_list_suggestions": {
+         "reach": ["School A", "School B", "School C"],
+         "target": ["School C", "School D", "School E"],
+         "safety": ["School E", "School F", "School N"]
+      },
+      "academic_plan": {
+         "course_suggestions": ["Class 1", "Class 2"],
+         "testing_strategy": "Advice on SAT/ACT or Portfolio"
+      },
+      "extracurriculars": {
+         "current_optimization": "How to improve current clubs",
+         "new_opportunities": ["Opportunity 1", "Opportunity 2"]
+      },
+      "timeline": [
+        {
+          "period": "Season/Year", 
+          "focus": "Main Theme",
+          "tasks": ["Task 1", "Task 2"]
+        }
+      ]
+    }
+    """
+
+    # 3. STRATEGIC GUIDELINES (The "Softer" Logic)
+    logic_constraints = f"""
+    1. TIMELINE CONTEXT: Current date is {current_date_str}. {duration_note}
+    2. MANDATORY SECTIONS: Fill every field in the JSON schema.
     
+    3. LOCATION STRATEGY: 
+       - User Preference: "{location}"
+       - Prioritize schools in this region. 
+       - However, you may suggest exceptional schools outside this region if they are a perfect academic match or offer better financial aid, but note why.
+    
+    4. SCHOOL LIST REALISM:
+       - Ensure "Safety" schools are actually safe (typically >50% acceptance or local options). 
+       - Be cautious with competitive majors. For example, CS at schools like UIUC or Washington is very hard to get into, so they are usually "Targets" or "Reaches" rather than Safeties.
+       - For Art majors, schools like RISD or CalArts are Reaches. Look for state schools with good art programs for Safeties.
+       
+    5. TESTING ADVICE:
+       - If they are young (9th/10th), encourage establishing a baseline (PSAT) before deciding to go test-optional.
+       - If they are older or strictly against testing, respect their "Test Optional" choice.
+       
+    6. HOLISTIC PROFILE:
+       - Look for connections between their activities. (e.g. If they like Art + Biology, suggest Medical Illustration).
+    """
+
+    # 4. Final Prompt
     prompt = (
-    f"You are a college admissions mentor writing a personalized roadmap for a high school student. "
-    f"The student is {grade} grade, has a {gpa} GPA, is interested in {interests}, and participates in {activities}. "
-    f"They are from a {demographic} background so keep that in mind "
-
-    "You should write month-by-month and grade-by-grade advice that is practical, empathetic, and tailored to their personal background. "
-    "Give academic goals, extracurricular tips, and summer suggestions that are aligned with their stated interests and clubs. "
-    "Reference their current activities directly and suggest specific scholarships, programs, or competitions that match their situation. "
-    f"also take this information about their testing into account: {testing}"
-    
-    f"The student is aiming for this in their colleges: {goals} and you should advice them on routes they should take and also advice them on other options of school if neccesary(if they are for example very below the standard). Make sure to give them advice about colleges outside of their goals too since it is important to not be limited"
-
-    f"Use this timeline format as an example of what the structure should look like:\n\n{example_timeline}\n\n"
-    
-    "DO NOT give generic advice like 'join clubs' — personalize it based on what they've already done. "
-    "Be warm, helpful, and encouraging in tone, while still being strategic. Make it feel like it was written just for them."
-    
-    "After your final thoughts and encourgments, don't say anything else like asking to review the students essay or anything like that. "
-    
-    "Throughout this process be honest and reasonable while being uplifitng and helpful. Also make sure when you give backup options for schools, you don't calls schools that aren't actually safeties, safeties. Also be clear what school year you're reffering to so it doesn't get confusing, example: don't just switch from one grade to another in the middle of the year like in decemeber"
-    
-    f"This additional information about their classes: {classes} so take this into consideration too. However you can't be certain what their school offers so everything should be a suggestion for future courses to take."
-    
-#     "also stop using ** and things like that to make characters bold, the character output where you appear doesn't allow that"
-)
-
+        f"You are a supportive college admissions mentor. Generate a personalized JSON roadmap.\n"
+        f"Student: Grade {grade}, GPA {gpa}, Interests {interests}, Activities {activities}.\n"
+        f"Demographics: {demographic}. Testing: {testing}. Goals: {goals}. Location Preference: {location}.\n\n"
         
-        
+        f"### STRATEGIC GUIDELINES\n"
+        f"{logic_constraints}\n\n"
+
+        f"### OUTPUT INSTRUCTIONS\n"
+        f"You must output valid JSON using the exact schema below. Fill in EVERY field.\n"
+        f"{json_schema}"
+    )
+
     try:
-        response = client.chat.completions.create(
-            model="gpt-4.1-mini",
-            messages=[{"role": "user", "content": prompt}],
-            temperature=0.7,
-            # max_tokens=2300
-        )
-        roadmap = response.choices[0].message.content
+        print(f"📋 Roadmap request for {grade} student")
         
-        # Save roadmap to Supabase
+        chat_completion = client.chat.completions.create(
+            messages=[
+                {
+                    "role": "system", 
+                    "content": "You are a JSON-only API. You must return valid JSON with all requested fields."
+                },
+                {
+                    "role": "user",
+                    "content": prompt,
+                }
+            ],
+            model="llama-3.3-70b-versatile",
+            temperature=0.7,
+            max_tokens=4000, 
+            response_format={"type": "json_object"}
+        )
+        
+        roadmap_content_str = chat_completion.choices[0].message.content
+        
+        # Verify JSON before returning
+        try:
+            roadmap_json = json.loads(roadmap_content_str)
+        except json.JSONDecodeError:
+            print("⚠️ AI generated invalid JSON")
+            # You might want to retry here or return an error, but for now we pass it through
+            roadmap_json = {"error": "Invalid JSON", "raw": roadmap_content_str}
+
+        # Save to Supabase (saving the raw string for DB)
         try:
             result = supabase.table('roadmaps').insert({
                 'user_id': str(current_user.id),
@@ -148,18 +185,22 @@ async def generate_roadmap(request: Request, current_user = Depends(get_current_
                 'demographics': demographic,
                 'testing': testing,
                 'college_goals': goals,
+                'location':location,
                 'classes': classes,
-                'roadmap_content': roadmap
+                'roadmap_content': roadmap_content_str 
             }).execute()
             
-            return {"roadmap": roadmap, "id": result.data[0]['id']}
+            return {"roadmap": roadmap_json, "id": result.data[0]['id']}
         except Exception as db_error:
-            # Still return roadmap even if save fails
             print(f"Database error: {str(db_error)}")
-            return {"roadmap": roadmap, "warning": "Roadmap generated but not saved"}
+            return {"roadmap": roadmap_json, "warning": "Roadmap generated but not saved"}
             
     except Exception as e:
-        return {"error": str(e)}
+        print(f"Groq API Error: {e}")
+        raise HTTPException(
+            status_code=500, 
+            detail="AI service temporarily unavailable."
+        )
       
       
 @app.post("/essay")
@@ -211,13 +252,20 @@ Also make sure to say this advice is to be taken with a grain of salt because yo
     
     
     try:
-        response = client.chat.completions.create(
-            model="gpt-4.1-mini",
-            messages=[{"role": "user", "content": prompt}],
+        print(f"✍️ Essay feedback request received for {program}")
+        
+        chat_completion = client.chat.completions.create(
+            messages=[
+                {
+                    "role": "user",
+                    "content": prompt,
+                }
+            ],
+            model="llama-3.3-70b-versatile",  # Fast and high quality
             temperature=0.7,
-            # max_tokens=2300
+            max_tokens=5500
         )
-        feedback = response.choices[0].message.content
+        feedback = chat_completion.choices[0].message.content
         
         # Save essay feedback to Supabase
         try:
@@ -237,7 +285,11 @@ Also make sure to say this advice is to be taken with a grain of salt because yo
             return {"feedback": feedback, "warning": "Feedback generated but not saved"}
             
     except Exception as e:
-        return {"error": str(e)}
+        print(f"Groq API Error: {e}")
+        raise HTTPException(
+            status_code=500, 
+            detail="AI service temporarily unavailable. Please try again."
+        )
 
 # Get user's saved roadmaps
 @app.get("/roadmaps")

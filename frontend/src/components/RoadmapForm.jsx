@@ -11,6 +11,7 @@ function RoadmapForm({ setRoadmap, setLoading }) {
   const [activities, setActivities] = useState('');
   const [demographic, setDemographic] = useState('');
   const [testing, setTesting] = useState('');
+  const [location, setLocation] = useState('');
   const [collegeGoals, setCollegeGoals] = useState(''); 
   const [classes, setClasses] = useState('');
   const [error, setError] = useState('');
@@ -30,7 +31,7 @@ function RoadmapForm({ setRoadmap, setLoading }) {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`
         },
-        body: JSON.stringify({ gpa, grade, interests, activities, demographic, testing, collegeGoals, classes })
+        body: JSON.stringify({ gpa, grade, interests, activities, demographic, testing, collegeGoals, classes, location })
       });
 
       if (!response.ok) {
@@ -205,6 +206,15 @@ function RoadmapForm({ setRoadmap, setLoading }) {
             helperText="What type of colleges are you interested in?"
             rows={3}
           />
+
+        <Textarea
+          label="Location Preferences"
+          value={location}
+          onChange={(e) => setLocation(e.target.value)}
+          placeholder="e.g., want to stay close to home in California, open to East Coast, prefer urban areas, must be near family"
+          helperText="Geographic preferences or constraints for college location"
+          rows={2}
+        />
 
           <div className="pt-4">
             <Button

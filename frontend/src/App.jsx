@@ -59,6 +59,7 @@ function App() {
                     <Roadmap />
                   </ProtectedRoute>
                 } />
+                {/* <Route path="/roadmap" element={<Roadmap />} /> */}
                 <Route path="/essay" element={
                   <ProtectedRoute>
                     <EssayPage />
