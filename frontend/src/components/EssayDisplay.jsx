@@ -1,25 +1,5 @@
 import React, { useMemo } from 'react';
-
-// Mock Card component for demo
-const Card = ({ children, variant = 'default', padding = 'md', className = '' }) => {
-  const baseClasses = 'rounded-lg transition-all duration-200';
-  const variantClasses = {
-    default: 'bg-white border border-gray-200',
-    elevated: 'bg-white shadow-lg border border-gray-100',
-    outlined: 'bg-white border-2 border-gray-200'
-  };
-  const paddingClasses = {
-    sm: 'p-3',
-    md: 'p-4',
-    lg: 'p-6'
-  };
-  
-  return (
-    <div className={`${baseClasses} ${variantClasses[variant]} ${paddingClasses[padding]} ${className}`}>
-      {children}
-    </div>
-  );
-};
+import Card from './ui/Card';
 
 function EssayDisplay({ essay, loading }) {
   
@@ -296,40 +276,4 @@ function EssayDisplay({ essay, loading }) {
   );
 }
 
-// Demo wrapper with sample data
-export default function App() {
-  const sampleFeedback = {
-    letter_grade: 93,
-    essay_style: "cultural_reflection",
-    risk_assessment: {
-      took_creative_risks: true,
-      risks_paid_off: true,
-      explanation: "The essay uses an unconventional structure, opening with a seemingly mundane moment (grocery shopping) that evolves into a meditation on cultural identity. This risk paid off because the specificity made it memorable."
-    },
-    key_strengths: [
-      "Authentic voice that sounds like a real 17-year-old, not trying to impress",
-      "Unexpected opening (Costco rotisserie chicken) that hooks the reader immediately",
-      "Genuine cultural insight without falling into clichés or 'immigrant struggle' narratives"
-    ],
-    areas_for_improvement: [
-      "The transition between the grocery store scene and the reflection on family could be smoother",
-      "Consider adding one more concrete sensory detail in the final paragraph to mirror the opening"
-    ],
-    critique_breakdown: {
-      authenticity_and_voice: "This essay sounds unmistakably genuine. The casual references to 'the $4.99 chicken' and family arguments feel lived-in, not manufactured for admissions officers.",
-      insight_and_growth: "Strong reflection on navigating multiple cultural identities. The realization that 'home isn't a place' shows mature thinking without being preachy.",
-      storytelling_and_impact: "The mundane-to-meaningful arc is executed well. Readers will remember the chicken metaphor.",
-      structure_and_craft: "Non-linear structure works effectively. Minor roughness in transitions, but this adds to the authentic feel.",
-      prompt_responsiveness: "Directly addresses 'where you come from' while avoiding predictable narratives."
-    },
-    final_summary: "This essay would stand out in a competitive applicant pool. The unconventional topic and authentic voice make it memorable. An admissions officer would likely remember 'the chicken essay' weeks later.",
-    is_this_a_risk_worth_taking: "Yes. The risk of starting with something seemingly trivial (grocery shopping) is justified by how effectively you use it as a lens for cultural reflection. This approach is far more memorable than a generic 'my heritage' essay.",
-    detailed_action_plan: "1. Strengthen the transition on page 1 between the store scene and your family reflection—try adding one sentence that bridges the two.\n\n2. In your conclusion, mirror the sensory language from the opening. You describe the chicken vividly at the start; give us one concrete image at the end too.\n\n3. Read it aloud to catch any places where you're 'trying too hard.' Your natural voice is your biggest strength—trust it.\n\n4. This is nearly submission-ready. After these minor tweaks, have one trusted reader review it, then you're done."
-  };
-
-  return (
-    <div className="min-h-screen bg-gray-50 p-6">
-      <EssayDisplay essay={sampleFeedback} loading={false} />
-    </div>
-  );
-}
+export default EssayDisplay;

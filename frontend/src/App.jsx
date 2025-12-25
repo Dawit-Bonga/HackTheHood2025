@@ -74,11 +74,13 @@ function App() {
                     <RoadmapDetail />
                   </ProtectedRoute>
                 } />
+                {/* <Route path="/essay" element={<EssayPage />} /> */}
                 <Route path="/essay" element={
                   <ProtectedRoute>
                     <EssayPage />
                   </ProtectedRoute>
                 } />
+
                 <Route path="/essay/:id" element={
                   <ProtectedRoute>
                     <EssayDetail />

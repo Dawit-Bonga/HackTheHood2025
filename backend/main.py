@@ -38,6 +38,7 @@ app.add_middleware(
         "http://localhost:5176",
         "http://localhost:5177",
         "http://localhost:5179",
+        "http://localhost:5180",
         "https://hack-the-hood2025.vercel.app"],
     allow_credentials=True,
     allow_methods=["*"],
@@ -274,224 +275,105 @@ async def grade_essay(request: Request, current_user = Depends(get_current_user)
     program = data.get("program")
     word_limit = data.get("word_limit")
     
+    # ... (Keep existing word count logic) ...
     word_count = len(essay.split())
     length_instruction = f"Current Word Count: {word_count} words."
     if word_limit:
         length_instruction += f" / Limit: {word_limit} words."
-        if word_count > int(word_limit):
-            length_instruction += "\nCRITICAL: The student is OVER the limit. Your 'detailed_action_plan' MUST suggest specific cuts or sentences to remove."
-        elif word_count < int(word_limit) * 0.6:
-            length_instruction += "\nCRITICAL: The essay is significantly UNDER the limit. Suggest areas to expand."
     else:
-        length_instruction += " (No specific limit provided, assume standard Common App length of ~650 words)."
-    
-    # Enhanced JSON Schema
+        length_instruction += " (No specific limit provided)."
+
+    # 1. NEW JSON SCHEMA: COMPONENT SCORING
     json_schema = """
     {
-      "is_relevant": true,
-      "essay_style": "traditional_narrative|experimental|intellectual_exploration|cultural_reflection|humor_based|generic_achievement",
-      "cliche_count": 3,
-      "shows_vs_tells_ratio": "mostly_tells",
-      "risk_assessment": {
-        "took_creative_risks": false,
-        "risks_paid_off": false,
-        "explanation": "Explain what risks they took (or didn't take) and whether they worked"
+      "pre_grading_analysis": {
+        "cliche_count": 0,
+        "cliches_found": ["List phrases"],
+        "is_generic_topic": true,
+        "predicted_impact": "Will the reader yawn or cry?"
       },
-      "critique_breakdown": {
-        "authenticity_and_voice": "Does this sound like a real 17-year-old, not an essay robot?",
-        "insight_and_growth": "What did they learn? Is the reflection deep or surface-level?",
-        "storytelling_and_impact": "Emotional resonance, imagery, memorable moments",
-        "structure_and_craft": "Flow, transitions, intentional choices (even if unconventional)",
-        "prompt_responsiveness": "Did they answer the prompt in their own way?"
+      "scoring_breakdown": {
+        "voice_and_authenticity": { "score": 15, "max": 20, "reason": "..." },
+        "insight_and_growth": { "score": 15, "max": 20, "reason": "..." },
+        "storytelling_and_craft": { "score": 15, "max": 20, "reason": "..." },
+        "originality_and_risk": { "score": 15, "max": 20, "reason": "..." },
+        "prompt_responsiveness": { "score": 15, "max": 20, "reason": "..." }
       },
-      "key_strengths": ["Strength 1", "Strength 2"],
-      "areas_for_improvement": ["Critical issue 1", "Critical issue 2", "Critical issue 3"],
       "letter_grade": 75,
-      "is_this_a_risk_worth_taking": "N/A for generic essays",
-      "final_summary": "Would an admissions officer remember this essay a week later?",
-      "detailed_action_plan": "Specific next steps with concrete examples from their essay"
+      "summary_badge": "Generic & Safe | Risky & Raw | Polished but Boring | Exceptional",
+      "key_strengths": ["Strength 1", "Strength 2"],
+      "areas_for_improvement": ["Fix 1", "Fix 2"],
+      "final_summary": "Summary...",
+      "detailed_action_plan": "Specific next steps..."
     }
     """
 
-    # STRICTER Holistic Review System
+    # 2. SYSTEM PROMPT: FORCE DISTRIBUTION
     system_instruction = f"""
-You are an **EXPERIENCED COLLEGE ADMISSIONS OFFICER** at a highly selective institution (think Stanford, Yale, Amherst).
-You've read 10,000+ essays. You can spot generic writing instantly.
+You are a **CYNICAL ADMISSIONS OFFICER** who is tired of reading generic essays.
 Student Context: Grade {grade}, applying to {program}.
 
-### LENGTH CHECK
-{length_instruction}
+### SCORING PROTOCOL (COMPONENT METHOD)
+You must grade on 5 distinct components (Max 20 points each).
+**TOTAL SCORE = Sum of components.**
 
-### CRITICAL INSTRUCTION: BE STRICTER WITH GENERIC ESSAYS
+**1. Voice & Authenticity (Max 20)**
+- 18-20: Sounds exactly like a teenager talking to a friend. Raw, vulnerable.
+- 14-17: Polished but slightly "resume-speak."
+- <14: Sounds like ChatGPT or a parent wrote it.
 
-**You are TOO LENIENT with generic, safe essays.** The 80-89 range should be reserved for essays that are genuinely strong but not exceptional. Most "sports leadership," "mission trip," or "overcoming adversity" essays belong in the 70-79 range UNLESS they do something truly unique.
+**2. Insight & Growth (Max 20)**
+- 18-20: A profound realization that changes their worldview.
+- 14-17: "I worked hard and succeeded." (Standard)
+- <14: No lesson learned, or the lesson is a cliché.
 
-### AUTOMATIC PENALTIES (Apply these BEFORE detailed grading)
+**3. Storytelling & Craft (Max 20)**
+- 18-20: vivid imagery, "Show don't tell," cinematic pacing.
+- 14-17: Readable but relies on adjectives ("it was difficult") rather than scenes.
+- <14: Confusing structure or boring list of events.
 
-**CLICHÉ DETECTION (Subtract 5-10 points per category):**
-- Contains phrases like: "never give up," "hard work pays off," "believe in yourself," "taught me teamwork," "overcame obstacles," "rose to the challenge"
-- Uses inspirational speech language without showing actual words spoken
-- Relies on vague abstractions: "dedication," "perseverance," "leadership" without specific examples
-- Hollywood ending (last-second shot, dramatic rescue, perfect outcome)
+**4. Originality & Risk (Max 20)**
+- 18-20: Topic or angle I have NEVER seen before.
+- 14-17: Common topic (sports/mission trip) but with a slight twist.
+- <14: The "Costco Rotisserie Chicken" of generic essays (Sports, Dead Pet, Divorce, Moving). **CAP THIS AT 12 POINTS IF GENERIC.**
 
-**"TELLS NOT SHOWS" PENALTY (Subtract 5-10 points):**
-- Says "I gave an inspirational speech" but doesn't quote what was said
-- Says "my teammates were energized" but doesn't describe how
-- Uses adjectives instead of scenes: "intense," "important," "valuable lessons"
-- Lists what happened without sensory details or dialogue
+**5. Prompt Responsiveness (Max 20)**
+- 18-20: Answers the prompt deeply and directly.
+- <14: Ignores the prompt to tell a tangentially related story.
 
-**GENERIC TOPIC PENALTY (Subtract 5-10 points if all apply):**
-- Topic is: sports championship, mission trip, debate tournament win, overcoming injury, or volunteering revelation
-- AND the treatment is predictable (problem → effort → success → lesson)
-- AND the lesson could apply to anyone ("I learned leadership")
-- AND there's no unique personal voice or unexpected angle
+### MANDATORY PENALTIES
+- If the essay is a "Sports Injury" or "Mission Trip" essay: **Max Total Score is 82** (unless it subverts the genre perfectly).
+- If cliches > 3: **Deduct 5 points from total.**
 
-**"COULD BE ANYONE" TEST:**
-If you can swap the student's name with another applicant and the essay still works → Maximum score is 75.
+### GRADE CALIBRATION
+- **93+**: Top 1% of applicants. (Requires 19/20 in Originality).
+- **85-92**: Strong, admit-ready.
+- **75-84**: The "Safe Zone." Good grammar, boring content. **MOST ESSAYS ARE HERE.**
+- **< 75**: Weak.
 
-### GRADING PHILOSOPHY
-
-**RECOGNIZE UNCONVENTIONAL EXCELLENCE:**
-These patterns should NEVER be marked down:
-- Mundane moments with deep reflection (eating breakfast → philosophy)
-- Non-linear/experimental structure that serves a purpose
-- Humor with vulnerability
-- Small cultural stories (family recipes, language barriers)
-- Intellectual curiosity (exploring ideas, not achievements)
-- Quiet introspection without drama
-
-**RED FLAGS THAT MUST BE PENALIZED:**
-- Generic adversity without personal reflection
-- Thesaurus abuse / unnatural vocabulary
-- Listing achievements without vulnerability
-- Clichés without subversion
-- Lack of specific, concrete details
-- Savior complex (especially mission trips)
-- Resume disguised as essay
-- Vague future promises ("I will bring this to your campus")
-
-### SCORING GUIDE (CALIBRATED TO BE STRICTER)
-
-**95-100 (Exceptional - Top 2%):**
-Takes creative risks AND lands them perfectly. Unforgettable voice. You'd remember this essay 6 months later. Makes you want to meet this student immediately.
-- Example: Opens with grandmother's silence, uses white space on page to show it, ends with understanding communication beyond words
-
-**90-94 (Admit Strong - Top 10%):**
-Genuine authenticity, clear vulnerability, sophisticated reflection. Either executes traditional approach flawlessly OR takes risks that mostly work.
-- Example: Sports essay that subverts expectations—focuses on benched game where student learned more watching than playing
-
-**85-89 (Strong - Top 25%):**
-Solid voice, some vulnerability, clear growth shown (not just stated). Has at least ONE memorable moment or insight. May be safe, but executed very well.
-- Example: Volunteer essay with one specific conversation that changed perspective, shows not tells
-
-**80-84 (Good - Top 40%):**
-Competent writing, some personal voice, but predictable structure. May have good moments but lacks consistent depth or memorability.
-- Example: Music essay with decent reflection but obvious conclusions
-
-**70-79 (Average - Top 60%):**
-Generic topic OR generic treatment. Relies on clichés, tells more than shows, lacks distinct voice. The DEFAULT score for "safe" essays.
-- Example: Sports championship essay that hits all predictable beats, Hollywood ending, vague lessons
-
-**65-69 (Weak - Bottom 30%):**
-Confusing, minimal reflection, reads like resume. Misses the point of personal essays.
-- Example: Lists community service hours, talks about impact on others but not self
-
-**< 65 (Concerning):**
-Off-topic, incoherent, ethical issues, or extremely short.
-
-### SPECIFIC CALIBRATION EXAMPLES
-
-**"Basketball Championship with Inspirational Speech" Essay:**
-- If it includes: generic "never give up" speech, Hollywood ending (last-second shot), vague lessons about leadership, telling not showing
-- **Score: 72-76** (not 85!)
-- Why: Hits every generic sports essay cliché without subversion
-
-**Same Topic, But Better Version:**
-- Opens with the missed free throw in practice the day before
-- Focuses on the quiet moment with one teammate, not the whole team
-- The shot misses but team still wins, lesson is about trust not heroism
-- **Score: 88-91**
-- Why: Subverts expectations, shows vulnerability, has specific details
-
-### EVALUATION CHECKLIST
-
-Before assigning score, count:
-1. **Clichés used:** Each one = -2 points from baseline 85
-2. **"Show not tell" failures:** -5 points if mostly telling
-3. **Generic topic + treatment:** -10 points
-4. **No specific sensory details:** -5 points
-5. **Vague lessons anyone could learn:** -5 points
-
-**Starting baseline for generic essay = 75, NOT 85**
-
-### FEEDBACK TONE
-
-- **For generic essays (70-79):** Be direct but encouraging. "This topic can work, but you're treating it the way 10,000 other students do. What made YOUR experience different?"
-- **For strong essays (85+):** Validate specifically what works
-- **Always:** Cite 2-3 specific sentences from their essay to prove you read carefully
-- **Push for specificity:** Replace every vague statement with "Show us a moment when..."
-
-### FINAL CALIBRATION CHECK
-
-Before submitting score, ask yourself:
-1. If this student applied to Stanford, would this essay help or hurt them? (85+ should help)
-2. Would I remember this essay next week? (90+ must be yes)
-3. Can I picture this student as a real person? (If no → max 75)
-4. Did they take ANY creative risk? (If no → probably 70-79)
-
-**Remember: You are STRICTER than you think you need to be. Most essays are average. That's okay.**
+**DO NOT DEFAULT TO 93.** If it feels "fine," give it a 78.
 """
 
-    # Enhanced User Prompt with Pre-Grading Checklist
     user_content = f"""
 Prompt: {prompt_text}
 
 Student Essay:
 {essay}
 
-**MANDATORY PRE-GRADING ANALYSIS:**
-
-Before grading, explicitly count and list:
-1. Clichés used (list each phrase)
-2. "Telling" vs "Showing" moments (give ratio)
-3. Specific sensory details (count them)
-4. Whether the topic is generic (yes/no + why)
-5. Whether you'd remember this essay in 2 weeks (yes/no + why)
-
-**GRADING PENALTIES TO APPLY:**
-- Cliché penalty: ___
-- Tells-not-shows penalty: ___
-- Generic topic penalty: ___
-- Total deduction from baseline: ___
-
-**BASELINE SCORE:** 
-- If unconventional/risky essay: Start at 85
-- If generic topic with generic treatment: Start at 75
-- Apply penalties from there
-
-Now provide your holistic evaluation following this JSON schema:
+Analyze and grade based on the component system. 
+Calculate the 'letter_grade' by summing the 5 component scores.
+Output valid JSON:
 {json_schema}
-
-**CRITICAL REMINDER:** An 85 means "this essay would help at Stanford." Be honest about whether that's true.
 """
     
     try:
-        print(f"✍️ Essay feedback request received for {program}")
-        
         chat_completion = client.chat.completions.create(
             messages=[
-                {
-                    "role": "system",
-                    "content": system_instruction
-                },
-                {
-                    "role": "user",
-                    "content": user_content,
-                }
+                {"role": "system", "content": system_instruction},
+                {"role": "user", "content": user_content}
             ],
             model="llama-3.3-70b-versatile",
-            temperature=0.5,  # Lower = more consistent, stricter grading
-            top_p=0.85,  # Slightly lower for more focused evaluation
+            temperature=0.4, # Keep it low to enforce strict rubric
             max_tokens=4000,
             response_format={"type": "json_object"}
         )
