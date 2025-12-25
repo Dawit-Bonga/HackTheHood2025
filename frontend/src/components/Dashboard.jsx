@@ -3,12 +3,15 @@ import { useAuth } from '../context/AuthContext';
 import { useNavigate, Link } from 'react-router-dom';
 import Card from './ui/Card';
 import Button from './ui/Button';
+import ConfirmModal from './ui/ConfirmModal';
 
 function Dashboard() {
   const { user, getToken } = useAuth();
   const [roadmaps, setRoadmaps] = useState([]);
   const [essays, setEssays] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [deleteModal, setDeleteModal] = useState({ isOpen: false, type: null, id: null, title: '' });
+  const [deleting, setDeleting] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -39,6 +42,47 @@ function Dashboard() {
     } catch (error) {
       console.error('Error fetching user data:', error);
       setLoading(false);
+    }
+  };
+
+  const handleDeleteClick = (type, id, title) => {
+    setDeleteModal({ 
+      isOpen: true, 
+      type, 
+      id, 
+      title 
+    });
+  };
+
+  const handleDeleteConfirm = async () => {
+    setDeleting(true);
+    try {
+      const token = await getToken();
+      const backendUrl = import.meta.env.VITE_BACKEND;
+      const endpoint = deleteModal.type === 'roadmap' ? 'roadmaps' : 'essays';
+      
+      const response = await fetch(`${backendUrl}/${endpoint}/${deleteModal.id}`, {
+        method: 'DELETE',
+        headers: { Authorization: `Bearer ${token}` }
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to delete');
+      }
+
+      // Update local state
+      if (deleteModal.type === 'roadmap') {
+        setRoadmaps(roadmaps.filter(r => r.id !== deleteModal.id));
+      } else {
+        setEssays(essays.filter(e => e.id !== deleteModal.id));
+      }
+
+      setDeleteModal({ isOpen: false, type: null, id: null, title: '' });
+    } catch (error) {
+      console.error('Delete error:', error);
+      alert('Failed to delete. Please try again.');
+    } finally {
+      setDeleting(false);
     }
   };
 
@@ -151,7 +195,7 @@ function Dashboard() {
                 {roadmaps.slice(0, 3).map((roadmap, idx) => (
                   <Card key={idx} hover>
                     <div className="flex justify-between items-start">
-                      <div>
+                      <div className="flex-1">
                         <h3 className="font-semibold text-[var(--color-text-primary)]">
                           Roadmap {idx + 1}
                         </h3>
@@ -159,13 +203,25 @@ function Dashboard() {
                           Created {new Date(roadmap.created_at).toLocaleDateString()}
                         </p>
                       </div>
-                      <Button 
-                        variant="outline" 
-                        size="sm"
-                        onClick={() => navigate(`/roadmap/${roadmap.id}`)}
-                      >
-                        View
-                      </Button>
+                      <div className="flex gap-2">
+                        <Button 
+                          variant="outline" 
+                          size="sm"
+                          onClick={() => navigate(`/roadmap/${roadmap.id}`)}
+                        >
+                          View
+                        </Button>
+                        <Button 
+                          variant="outline" 
+                          size="sm"
+                          onClick={() => handleDeleteClick('roadmap', roadmap.id, `Roadmap ${idx + 1}`)}
+                          className="text-red-600 hover:bg-red-50 border-red-200"
+                        >
+                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                          </svg>
+                        </Button>
+                      </div>
                     </div>
                   </Card>
                 ))}
@@ -189,7 +245,7 @@ function Dashboard() {
                 {essays.slice(0, 3).map((essay, idx) => (
                   <Card key={idx} hover>
                     <div className="flex justify-between items-start">
-                      <div>
+                      <div className="flex-1">
                         <h3 className="font-semibold text-[var(--color-text-primary)]">
                           {essay.prompt?.substring(0, 60)}...
                         </h3>
@@ -197,13 +253,25 @@ function Dashboard() {
                           Created {new Date(essay.created_at).toLocaleDateString()}
                         </p>
                       </div>
-                      <Button 
-                        variant="outline" 
-                        size="sm"
-                        onClick={() => navigate(`/essay/${essay.id}`)}
-                      >
-                        View
-                      </Button>
+                      <div className="flex gap-2">
+                        <Button 
+                          variant="outline" 
+                          size="sm"
+                          onClick={() => navigate(`/essay/${essay.id}`)}
+                        >
+                          View
+                        </Button>
+                        <Button 
+                          variant="outline" 
+                          size="sm"
+                          onClick={() => handleDeleteClick('essay', essay.id, `Essay #${idx + 1}`)}
+                          className="text-red-600 hover:bg-red-50 border-red-200"
+                        >
+                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                          </svg>
+                        </Button>
+                      </div>
                     </div>
                   </Card>
                 ))}
@@ -212,6 +280,17 @@ function Dashboard() {
           </div>
         </div>
       </section>
+
+      {/* Confirmation Modal */}
+      <ConfirmModal
+        isOpen={deleteModal.isOpen}
+        onClose={() => setDeleteModal({ isOpen: false, type: null, id: null, title: '' })}
+        onConfirm={handleDeleteConfirm}
+        title={`Delete ${deleteModal.title}?`}
+        message="This action cannot be undone. The item will be permanently deleted from your account."
+        confirmText="Delete"
+        loading={deleting}
+      />
     </div>
   );
 }

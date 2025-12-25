@@ -527,6 +527,43 @@ Now provide your holistic evaluation following this JSON schema:
             detail="AI service temporarily unavailable."
         )
 
+
+@app.delete("/roadmaps/{roadmap_id}")
+async def delete_roadmap(roadmap_id: str, current_user = Depends(get_current_user)):
+    try:
+        # Verify the roadmap belongs to the user before deleting
+        result = supabase.table('roadmaps')\
+            .delete()\
+            .eq('id', roadmap_id)\
+            .eq('user_id', str(current_user.id))\
+            .execute()
+        
+        if not result.data:
+            raise HTTPException(status_code=404, detail="Roadmap not found or unauthorized")
+            
+        return {"message": "Roadmap deleted successfully", "id": roadmap_id}
+    except Exception as e:
+        print(f"Delete error: {str(e)}")
+        raise HTTPException(status_code=500, detail="Failed to delete roadmap")
+
+# Delete a specific essay
+@app.delete("/essays/{essay_id}")
+async def delete_essay(essay_id: str, current_user = Depends(get_current_user)):
+    try:
+        # Verify the essay belongs to the user before deleting
+        result = supabase.table('essays')\
+            .delete()\
+            .eq('id', essay_id)\
+            .eq('user_id', str(current_user.id))\
+            .execute()
+        
+        if not result.data:
+            raise HTTPException(status_code=404, detail="Essay not found or unauthorized")
+            
+        return {"message": "Essay deleted successfully", "id": essay_id}
+    except Exception as e:
+        print(f"Delete error: {str(e)}")
+        raise HTTPException(status_code=500, detail="Failed to delete essay")
 # Get user's saved roadmaps
 @app.get("/roadmaps")
 async def get_roadmaps(current_user = Depends(get_current_user)):

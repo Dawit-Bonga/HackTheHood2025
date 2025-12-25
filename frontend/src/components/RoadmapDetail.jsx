@@ -4,6 +4,7 @@ import { useAuth } from '../context/AuthContext';
 import RoadmapDisplay from './Display';
 import Button from './ui/Button';
 import Card from './ui/Card';
+import ConfirmModal from './ui/ConfirmModal';
 
 function RoadmapDetail() {
   const { id } = useParams();
@@ -12,6 +13,8 @@ function RoadmapDetail() {
   const [roadmap, setRoadmap] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [deleteModal, setDeleteModal] = useState(false);
+  const [deleting, setDeleting] = useState(false);
 
   useEffect(() => {
     fetchRoadmap();
@@ -51,6 +54,31 @@ function RoadmapDetail() {
     }
   };
 
+  const handleDelete = async () => {
+    setDeleting(true);
+    try {
+      const token = await getToken();
+      const backendUrl = import.meta.env.VITE_BACKEND;
+      
+      const response = await fetch(`${backendUrl}/roadmaps/${id}`, {
+        method: 'DELETE',
+        headers: { Authorization: `Bearer ${token}` }
+      });
+
+      if (response.ok) {
+        navigate('/dashboard');
+      } else {
+        throw new Error('Failed to delete');
+      }
+    } catch (err) {
+      console.error('Delete error:', err);
+      alert('Failed to delete. Please try again.');
+    } finally {
+      setDeleting(false);
+      setDeleteModal(false);
+    }
+  };
+
   if (error) {
     return (
       <div className="bg-white min-h-screen">
@@ -82,17 +110,38 @@ function RoadmapDetail() {
     <div className="bg-white min-h-screen">
       <section className="section">
         <div className="container">
-          <div className="mb-6">
+          <div className="mb-6 flex justify-between items-center">
             <Button variant="outline" onClick={() => navigate('/dashboard')}>
               <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
               </svg>
               Back to Dashboard
             </Button>
+            <Button 
+              variant="outline" 
+              onClick={() => setDeleteModal(true)}
+              className="text-red-600 hover:bg-red-50 border-red-200"
+            >
+              <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+              </svg>
+              Delete Roadmap
+            </Button>
           </div>
           <RoadmapDisplay roadmap={roadmap} loading={loading} />
         </div>
       </section>
+
+      {/* Confirmation Modal */}
+      <ConfirmModal
+        isOpen={deleteModal}
+        onClose={() => setDeleteModal(false)}
+        onConfirm={handleDelete}
+        title="Delete this roadmap?"
+        message="This action cannot be undone. The roadmap will be permanently deleted from your account."
+        confirmText="Delete"
+        loading={deleting}
+      />
     </div>
   );
 }
