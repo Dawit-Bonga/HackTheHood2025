@@ -48,13 +48,19 @@ function Login() {
   };
 
   return (
-    <div className="min-h-screen bg-[var(--color-bg-secondary)] flex items-center justify-center py-12 px-4">
-      <div className="max-w-md w-full">
-        <div className="text-center mb-8">
-          <h2 className="text-4xl font-bold text-[var(--color-text-primary)] mb-2">
-            {isLogin ? 'Welcome Back' : 'Create Your Account'}
-          </h2>
-          <p className="text-[var(--color-text-secondary)]">
+    <div className="min-h-screen bg-gradient-to-br from-[var(--color-bg-secondary)] via-white to-[var(--color-bg-secondary)] flex items-center justify-center py-12 px-4">
+      <div className="max-w-2xl w-full">
+        {/* Header Section - Bigger and more prominent */}
+        <div className="text-center mb-10">
+          <div className="inline-flex items-center justify-center w-20 h-20 bg-[var(--color-primary-light)] rounded-2xl mb-6 shadow-lg">
+            <svg className="w-10 h-10 text-[var(--color-primary)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+            </svg>
+          </div>
+          <h1 className="text-5xl md:text-6xl font-bold text-[var(--color-text-primary)] mb-4">
+            {isLogin ? 'Welcome Back' : 'Get Started'}
+          </h1>
+          <p className="text-xl text-[var(--color-text-secondary)] max-w-xl mx-auto leading-relaxed">
             {isLogin 
               ? 'Sign in to continue your college journey' 
               : 'Start your path to college success today'
@@ -62,22 +68,23 @@ function Login() {
           </p>
         </div>
 
-        <Card variant="elevated" padding="lg">
+        <Card variant="elevated" padding="lg" className="shadow-2xl">
           {error && (
-            <div className="mb-6 p-4 bg-red-50 border border-red-200 text-red-700 rounded-lg flex items-start gap-3">
-              <svg className="w-5 h-5 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+            <div className="mb-6 p-5 bg-red-50 border-2 border-red-200 text-red-700 rounded-xl flex items-start gap-3">
+              <svg className="w-6 h-6 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
                 <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
               </svg>
-              <span className="text-sm">{error}</span>
+              <span className="text-base font-medium">{error}</span>
             </div>
           )}
           
+          {/* Google Sign In Button - Bigger */}
           <button
             onClick={handleGoogleLogin}
             disabled={loading}
-            className="w-full mb-6 bg-white border-2 border-[var(--color-border)] text-[var(--color-text-primary)] py-3 rounded-lg font-medium hover:bg-[var(--color-bg-secondary)] hover:border-[var(--color-text-muted)] transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-3"
+            className="w-full mb-8 bg-white border-2 border-[var(--color-border)] text-[var(--color-text-primary)] py-4 rounded-xl font-semibold text-lg hover:bg-[var(--color-bg-secondary)] hover:border-[var(--color-text-muted)] hover:shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-3"
           >
-            <svg className="w-5 h-5" viewBox="0 0 24 24">
+            <svg className="w-6 h-6" viewBox="0 0 24 24">
               <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
               <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
               <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
@@ -86,16 +93,18 @@ function Login() {
             Continue with Google
           </button>
 
-          <div className="relative mb-6">
+          {/* Divider - More Spacing */}
+          <div className="relative mb-8">
             <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-[var(--color-border)]"></div>
+              <div className="w-full border-t-2 border-[var(--color-border)]"></div>
             </div>
             <div className="relative flex justify-center text-sm">
-              <span className="px-3 bg-white text-[var(--color-text-muted)]">Or continue with email</span>
+              <span className="px-4 bg-white text-[var(--color-text-muted)] font-medium text-base">Or continue with email</span>
             </div>
           </div>
           
-          <form onSubmit={handleSubmit} className="space-y-5">
+          {/* Form - More Spacing */}
+          <form onSubmit={handleSubmit} className="space-y-6">
             {!isLogin && (
               <>
                 <Input
@@ -142,32 +151,39 @@ function Login() {
               minLength="6"
             />
             
-            <Button
-              type="submit"
-              variant="primary"
-              size="lg"
-              fullWidth
-              disabled={loading}
-            >
-              {loading ? (
-                <span className="flex items-center justify-center gap-2">
-                  <span className="loading-spinner"></span>
-                  {isLogin ? 'Signing in...' : 'Creating account...'}
-                </span>
-              ) : (
-                isLogin ? 'Sign In' : 'Create Account'
-              )}
-            </Button>
+            <div className="pt-2">
+              <Button
+                type="submit"
+                variant="primary"
+                size="lg"
+                fullWidth
+                disabled={loading}
+                className="py-4 text-lg"
+              >
+                {loading ? (
+                  <span className="flex items-center justify-center gap-2">
+                    <svg className="animate-spin h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    {isLogin ? 'Signing in...' : 'Creating account...'}
+                  </span>
+                ) : (
+                  isLogin ? 'Sign In' : 'Create Account'
+                )}
+              </Button>
+            </div>
           </form>
         </Card>
         
-        <div className="mt-6 text-center">
+        {/* Toggle Section - Bigger */}
+        <div className="mt-8 text-center">
           <button
             onClick={() => {
               setIsLogin(!isLogin);
               setError('');
             }}
-            className="text-[var(--color-primary)] hover:text-[var(--color-primary-hover)] font-medium transition-colors"
+            className="text-lg text-[var(--color-primary)] hover:text-[var(--color-primary-hover)] font-semibold transition-colors hover:underline"
           >
             {isLogin ? "Don't have an account? Sign up" : 'Already have an account? Sign in'}
           </button>
