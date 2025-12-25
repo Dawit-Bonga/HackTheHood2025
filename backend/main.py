@@ -70,6 +70,16 @@ async def generate_roadmap(request: Request, current_user = Depends(get_current_
     classes = data.get("classes")
     location = data.get("location")
     
+    try:
+        gpa_float = float(gpa)
+        if not 0 <= gpa_float <= 5:  # Allow for weighted GPAs
+            raise HTTPException(status_code=400, detail="GPA must be between 0 and 5")
+    except ValueError:
+        raise HTTPException(status_code=400, detail="Invalid GPA format")
+
+# Limit string lengths to prevent abuse
+    if len(str(interests)) > 2000 or len(str(activities)) > 2000:
+        raise HTTPException(status_code=400, detail="Input too long")
     # 1. Get Current Date & Logic
     now = datetime.now()
     current_date_str = now.strftime("%B %Y")
