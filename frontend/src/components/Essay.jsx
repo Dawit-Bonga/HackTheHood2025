@@ -3,7 +3,8 @@ import EssayDisplay from './EssayDisplay';
 import { useAuth } from '../context/AuthContext';
 import Button from './ui/Button';
 import Card from './ui/Card';
-import { Textarea, Select } from './ui/Input';
+// import { Textarea, Select } from './ui/Input';
+import { Textarea, Select, Input } from './ui/Input';
 
 function EssayForm({ setEssayFeedback, setLoading }) {
     const [prompt, setPrompt] = useState('');
@@ -11,6 +12,7 @@ function EssayForm({ setEssayFeedback, setLoading }) {
     const [grade, setGrade] = useState('');
     const [essay, setEssay] = useState('');
     const [error, setError] = useState('');
+    const [wordLimit, setWordLimit] = useState('')
     const [retryCount, setRetryCount] = useState(0);
     const { getToken } = useAuth();
 
@@ -27,7 +29,11 @@ function EssayForm({ setEssayFeedback, setLoading }) {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`
                 },
-                body: JSON.stringify({ prompt, grade, program, essay })
+                body: JSON.stringify({ prompt, 
+                    grade, 
+                    program, 
+                    essay,
+                    word_limit: wordLimit ? parseInt(wordLimit) : null })
             });
 
             if (!response.ok) {
@@ -138,6 +144,14 @@ function EssayForm({ setEssayFeedback, setLoading }) {
                         helperText="Include the prompt and word limit if applicable"
                         rows={3}
                         required
+                    />
+
+                    <Input
+                        label="Word Limit (Optional)"
+                        type="number"
+                        placeholder="e.g. 650"
+                        value={wordLimit}
+                        onChange={(e) => setWordLimit(e.target.value)}
                     />
 
                     <Textarea

@@ -60,6 +60,9 @@ export const AuthProvider = ({ children }) => {
   };
 
   const getToken = async () => {
+     if (import.meta.env.VITE_DEV_MODE === 'true') {
+    return 'dev-token-bypass';
+    }
     const { data: { session } } = await supabase.auth.getSession();
     return session?.access_token;
   };

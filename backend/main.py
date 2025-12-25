@@ -268,49 +268,211 @@ async def generate_roadmap(request: Request, current_user = Depends(get_current_
 async def grade_essay(request: Request, current_user = Depends(get_current_user)):
     data = await request.json()
     grade = data.get("grade")
-    prompt = data.get("prompt")
+    prompt_text = data.get("prompt")
     essay = data.get("essay")
     program = data.get("program")
+    word_limit = data.get("word_limit")
     
-    advice = """
+    word_count = len(essay.split())
+    length_instruction = f"Current Word Count: {word_count} words."
+    if word_limit:
+        length_instruction += f" / Limit: {word_limit} words."
+        if word_count > int(word_limit):
+            length_instruction += "\nCRITICAL: The student is OVER the limit. Your 'detailed_action_plan' MUST suggest specific cuts or sentences to remove."
+        elif word_count < int(word_limit) * 0.6:
+            length_instruction += "\nCRITICAL: The essay is significantly UNDER the limit. Suggest areas to expand."
+    else:
+        length_instruction += " (No specific limit provided, assume standard Common App length of ~650 words)."
+    
+    # Enhanced JSON Schema
+    json_schema = """
+    {
+      "is_relevant": true,
+      "essay_style": "traditional_narrative|experimental|intellectual_exploration|cultural_reflection|humor_based|generic_achievement",
+      "cliche_count": 3,
+      "shows_vs_tells_ratio": "mostly_tells",
+      "risk_assessment": {
+        "took_creative_risks": false,
+        "risks_paid_off": false,
+        "explanation": "Explain what risks they took (or didn't take) and whether they worked"
+      },
+      "critique_breakdown": {
+        "authenticity_and_voice": "Does this sound like a real 17-year-old, not an essay robot?",
+        "insight_and_growth": "What did they learn? Is the reflection deep or surface-level?",
+        "storytelling_and_impact": "Emotional resonance, imagery, memorable moments",
+        "structure_and_craft": "Flow, transitions, intentional choices (even if unconventional)",
+        "prompt_responsiveness": "Did they answer the prompt in their own way?"
+      },
+      "key_strengths": ["Strength 1", "Strength 2"],
+      "areas_for_improvement": ["Critical issue 1", "Critical issue 2", "Critical issue 3"],
+      "letter_grade": 75,
+      "is_this_a_risk_worth_taking": "N/A for generic essays",
+      "final_summary": "Would an admissions officer remember this essay a week later?",
+      "detailed_action_plan": "Specific next steps with concrete examples from their essay"
+    }
+    """
+
+    # STRICTER Holistic Review System
+    system_instruction = f"""
+You are an **EXPERIENCED COLLEGE ADMISSIONS OFFICER** at a highly selective institution (think Stanford, Yale, Amherst).
+You've read 10,000+ essays. You can spot generic writing instantly.
+Student Context: Grade {grade}, applying to {program}.
+
+### LENGTH CHECK
+{length_instruction}
+
+### CRITICAL INSTRUCTION: BE STRICTER WITH GENERIC ESSAYS
+
+**You are TOO LENIENT with generic, safe essays.** The 80-89 range should be reserved for essays that are genuinely strong but not exceptional. Most "sports leadership," "mission trip," or "overcoming adversity" essays belong in the 70-79 range UNLESS they do something truly unique.
+
+### AUTOMATIC PENALTIES (Apply these BEFORE detailed grading)
+
+**CLICHÉ DETECTION (Subtract 5-10 points per category):**
+- Contains phrases like: "never give up," "hard work pays off," "believe in yourself," "taught me teamwork," "overcame obstacles," "rose to the challenge"
+- Uses inspirational speech language without showing actual words spoken
+- Relies on vague abstractions: "dedication," "perseverance," "leadership" without specific examples
+- Hollywood ending (last-second shot, dramatic rescue, perfect outcome)
+
+**"TELLS NOT SHOWS" PENALTY (Subtract 5-10 points):**
+- Says "I gave an inspirational speech" but doesn't quote what was said
+- Says "my teammates were energized" but doesn't describe how
+- Uses adjectives instead of scenes: "intense," "important," "valuable lessons"
+- Lists what happened without sensory details or dialogue
+
+**GENERIC TOPIC PENALTY (Subtract 5-10 points if all apply):**
+- Topic is: sports championship, mission trip, debate tournament win, overcoming injury, or volunteering revelation
+- AND the treatment is predictable (problem → effort → success → lesson)
+- AND the lesson could apply to anyone ("I learned leadership")
+- AND there's no unique personal voice or unexpected angle
+
+**"COULD BE ANYONE" TEST:**
+If you can swap the student's name with another applicant and the essay still works → Maximum score is 75.
+
+### GRADING PHILOSOPHY
+
+**RECOGNIZE UNCONVENTIONAL EXCELLENCE:**
+These patterns should NEVER be marked down:
+- Mundane moments with deep reflection (eating breakfast → philosophy)
+- Non-linear/experimental structure that serves a purpose
+- Humor with vulnerability
+- Small cultural stories (family recipes, language barriers)
+- Intellectual curiosity (exploring ideas, not achievements)
+- Quiet introspection without drama
+
+**RED FLAGS THAT MUST BE PENALIZED:**
+- Generic adversity without personal reflection
+- Thesaurus abuse / unnatural vocabulary
+- Listing achievements without vulnerability
+- Clichés without subversion
+- Lack of specific, concrete details
+- Savior complex (especially mission trips)
+- Resume disguised as essay
+- Vague future promises ("I will bring this to your campus")
+
+### SCORING GUIDE (CALIBRATED TO BE STRICTER)
+
+**95-100 (Exceptional - Top 2%):**
+Takes creative risks AND lands them perfectly. Unforgettable voice. You'd remember this essay 6 months later. Makes you want to meet this student immediately.
+- Example: Opens with grandmother's silence, uses white space on page to show it, ends with understanding communication beyond words
+
+**90-94 (Admit Strong - Top 10%):**
+Genuine authenticity, clear vulnerability, sophisticated reflection. Either executes traditional approach flawlessly OR takes risks that mostly work.
+- Example: Sports essay that subverts expectations—focuses on benched game where student learned more watching than playing
+
+**85-89 (Strong - Top 25%):**
+Solid voice, some vulnerability, clear growth shown (not just stated). Has at least ONE memorable moment or insight. May be safe, but executed very well.
+- Example: Volunteer essay with one specific conversation that changed perspective, shows not tells
+
+**80-84 (Good - Top 40%):**
+Competent writing, some personal voice, but predictable structure. May have good moments but lacks consistent depth or memorability.
+- Example: Music essay with decent reflection but obvious conclusions
+
+**70-79 (Average - Top 60%):**
+Generic topic OR generic treatment. Relies on clichés, tells more than shows, lacks distinct voice. The DEFAULT score for "safe" essays.
+- Example: Sports championship essay that hits all predictable beats, Hollywood ending, vague lessons
+
+**65-69 (Weak - Bottom 30%):**
+Confusing, minimal reflection, reads like resume. Misses the point of personal essays.
+- Example: Lists community service hours, talks about impact on others but not self
+
+**< 65 (Concerning):**
+Off-topic, incoherent, ethical issues, or extremely short.
+
+### SPECIFIC CALIBRATION EXAMPLES
+
+**"Basketball Championship with Inspirational Speech" Essay:**
+- If it includes: generic "never give up" speech, Hollywood ending (last-second shot), vague lessons about leadership, telling not showing
+- **Score: 72-76** (not 85!)
+- Why: Hits every generic sports essay cliché without subversion
+
+**Same Topic, But Better Version:**
+- Opens with the missed free throw in practice the day before
+- Focuses on the quiet moment with one teammate, not the whole team
+- The shot misses but team still wins, lesson is about trust not heroism
+- **Score: 88-91**
+- Why: Subverts expectations, shows vulnerability, has specific details
+
+### EVALUATION CHECKLIST
+
+Before assigning score, count:
+1. **Clichés used:** Each one = -2 points from baseline 85
+2. **"Show not tell" failures:** -5 points if mostly telling
+3. **Generic topic + treatment:** -10 points
+4. **No specific sensory details:** -5 points
+5. **Vague lessons anyone could learn:** -5 points
+
+**Starting baseline for generic essay = 75, NOT 85**
+
+### FEEDBACK TONE
+
+- **For generic essays (70-79):** Be direct but encouraging. "This topic can work, but you're treating it the way 10,000 other students do. What made YOUR experience different?"
+- **For strong essays (85+):** Validate specifically what works
+- **Always:** Cite 2-3 specific sentences from their essay to prove you read carefully
+- **Push for specificity:** Replace every vague statement with "Show us a moment when..."
+
+### FINAL CALIBRATION CHECK
+
+Before submitting score, ask yourself:
+1. If this student applied to Stanford, would this essay help or hurt them? (85+ should help)
+2. Would I remember this essay next week? (90+ must be yes)
+3. Can I picture this student as a real person? (If no → max 75)
+4. Did they take ANY creative risk? (If no → probably 70-79)
+
+**Remember: You are STRICTER than you think you need to be. Most essays are average. That's okay.**
 """
-    prompt = (
-      f""" 
-      You are a college admissions coach giving supportive and constructive feedback on student essays. The student may be a first-generation applicant or from an underrepresented background, so prioritize encouragement and clarity.
 
-Here is the prompt they are responding to:
-{prompt}
+    # Enhanced User Prompt with Pre-Grading Checklist
+    user_content = f"""
+Prompt: {prompt_text}
 
-They are applying to:
-{program}
-
-The student's grade level is: {grade}
-
-Here is their essay:
+Student Essay:
 {essay}
 
-Please provide feedback focused on:
-- Clarity of ideas
-- Storytelling and emotional impact
-- Structure and organization
-- Grammar and sentence fluency
-- How well it answers the prompt
-- What could be improved, and what is strong
--final grade and thoughts
--Be specific with your feedback and don't be afraid to make it long. The more detailed and actually attentive you are, the better.
+**MANDATORY PRE-GRADING ANALYSIS:**
 
-Use a warm, helpful tone. Speak directly to the student (e.g., “One thing you’re doing well is…” or “You might consider…”). Be clear, actionable, and encouraging.
+Before grading, explicitly count and list:
+1. Clichés used (list each phrase)
+2. "Telling" vs "Showing" moments (give ratio)
+3. Specific sensory details (count them)
+4. Whether the topic is generic (yes/no + why)
+5. Whether you'd remember this essay in 2 weeks (yes/no + why)
 
-However also be realistic and critical when necessary with your judgmenets so that the student can get the most benefit out of this. At the end of your feedback have a Grade:[The grade you'd give them out of a 100] and then say resubmit after your changes to see the new grade.
+**GRADING PENALTIES TO APPLY:**
+- Cliché penalty: ___
+- Tells-not-shows penalty: ___
+- Generic topic penalty: ___
+- Total deduction from baseline: ___
 
-Also make sure to say this advice is to be taken with a grain of salt because you don't always need to take advice if you think it works for you.
+**BASELINE SCORE:** 
+- If unconventional/risky essay: Start at 85
+- If generic topic with generic treatment: Start at 75
+- Apply penalties from there
 
+Now provide your holistic evaluation following this JSON schema:
+{json_schema}
 
-      
-      
-      """
-)
-    
+**CRITICAL REMINDER:** An 85 means "this essay would help at Stanford." Be honest about whether that's true.
+"""
     
     try:
         print(f"✍️ Essay feedback request received for {program}")
@@ -318,38 +480,50 @@ Also make sure to say this advice is to be taken with a grain of salt because yo
         chat_completion = client.chat.completions.create(
             messages=[
                 {
+                    "role": "system",
+                    "content": system_instruction
+                },
+                {
                     "role": "user",
-                    "content": prompt,
+                    "content": user_content,
                 }
             ],
-            model="llama-3.3-70b-versatile",  # Fast and high quality
-            temperature=0.7,
-            max_tokens=5500
+            model="llama-3.3-70b-versatile",
+            temperature=0.5,  # Lower = more consistent, stricter grading
+            top_p=0.85,  # Slightly lower for more focused evaluation
+            max_tokens=4000,
+            response_format={"type": "json_object"}
         )
-        feedback = chat_completion.choices[0].message.content
         
-        # Save essay feedback to Supabase
+        feedback_content_str = chat_completion.choices[0].message.content
+        
+        # Parse JSON response
+        try:
+            feedback_json = json.loads(feedback_content_str)
+        except json.JSONDecodeError:
+            feedback_json = {"error": "Invalid JSON", "raw_text": feedback_content_str}
+            
+        # Save to database
         try:
             result = supabase.table('essays').insert({
                 'user_id': str(current_user.id),
                 'grade': grade,
-                'prompt': data.get("prompt"),
+                'prompt': prompt_text,
                 'essay_text': essay,
                 'program': program,
-                'feedback': feedback
+                'feedback': feedback_content_str 
             }).execute()
             
-            return {"feedback": feedback, "id": result.data[0]['id']}
+            return {"feedback": feedback_json, "id": result.data[0]['id']}
         except Exception as db_error:
-            # Still return feedback even if save fails
             print(f"Database error: {str(db_error)}")
-            return {"feedback": feedback, "warning": "Feedback generated but not saved"}
+            return {"feedback": feedback_json, "warning": "Feedback generated but not saved"}
             
     except Exception as e:
         print(f"Groq API Error: {e}")
         raise HTTPException(
             status_code=500, 
-            detail="AI service temporarily unavailable. Please try again."
+            detail="AI service temporarily unavailable."
         )
 
 # Get user's saved roadmaps

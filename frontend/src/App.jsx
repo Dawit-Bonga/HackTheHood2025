@@ -65,6 +65,7 @@ function App() {
                     <EssayPage />
                   </ProtectedRoute>
                 } />
+                {/* <Route path="/essay" element={<EssayPage />} /> */}
               </Routes>
             </main>
             <Footer />
