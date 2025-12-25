@@ -284,7 +284,7 @@ function About() {
                 variant="secondary" 
                 size="lg" 
                 fullWidth 
-                className="sm:w-auto bg-white text-[var(--color-primary)] hover:bg-gray-50"
+                className="sm:w-auto bg-white text-blue-700 font-semibold border-2 border-blue-600 hover:bg-blue-50 hover:border-blue-700"
               >
                 Get Started Now
               </Button>
