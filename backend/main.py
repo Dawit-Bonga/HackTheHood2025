@@ -7,7 +7,9 @@ from dotenv import load_dotenv
 from supabase import create_client, Client
 import json
 from datetime import datetime
-
+from slowapi import Limiter, _rate_limit_exceeded_handler  # Add these
+from slowapi.util import get_remote_address
+from slowapi.errors import RateLimitExceeded
 load_dotenv()
 
 client = Groq(
@@ -21,6 +23,12 @@ supabase: Client = create_client(supabase_url, supabase_key)
 
 app = FastAPI()
 security = HTTPBearer()
+
+#gets their address
+limiter = Limiter(key_func=get_remote_address)
+app.state.limiter = limiter
+app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
+
 
 app.add_middleware(
     CORSMiddleware,
@@ -54,12 +62,48 @@ async def get_current_user(credentials: HTTPAuthorizationCredentials = Depends(s
         )
 
 
+def validate_roadmap_input(data):
+    """Validate user input to prevent abuse"""
+    # Check required fields
+    required = ['gpa', 'grade', 'interests']
+    for field in required:
+        if not data.get(field):
+            raise HTTPException(status_code=400, detail=f"Missing required field: {field}")
+    
+    # Validate GPA
+    try:
+        gpa = float(data.get('gpa'))
+        if not 0 <= gpa <= 5:
+            raise HTTPException(status_code=400, detail="GPA must be between 0 and 5")
+    except (ValueError, TypeError):
+        raise HTTPException(status_code=400, detail="Invalid GPA format")
+    
+    # Validate string lengths (prevent spam/abuse)
+    text_fields = {
+        'interests': 2000,
+        'activities': 2000,
+        'demographic': 1000,
+        'testing': 1000,
+        'collegeGoals': 1000,
+        'classes': 2000,
+        'location': 500
+    }
+    
+    for field, max_length in text_fields.items():
+        value = data.get(field, '')
+        if len(str(value)) > max_length:
+            raise HTTPException(
+                status_code=400, 
+                detail=f"{field} is too long (max {max_length} characters)"
+            )
 
 @app.post("/generate")
+@limiter.limit("3/minute")
 async def generate_roadmap(request: Request, current_user = Depends(get_current_user)):
     data = await request.json()
     
     # Extract data
+    validate_roadmap_input(data)
     gpa = data.get("gpa")
     grade = data.get("grade")
     interests = data.get("interests")
@@ -70,16 +114,16 @@ async def generate_roadmap(request: Request, current_user = Depends(get_current_
     classes = data.get("classes")
     location = data.get("location")
     
-    try:
-        gpa_float = float(gpa)
-        if not 0 <= gpa_float <= 5:  # Allow for weighted GPAs
-            raise HTTPException(status_code=400, detail="GPA must be between 0 and 5")
-    except ValueError:
-        raise HTTPException(status_code=400, detail="Invalid GPA format")
+#     try:
+#         gpa_float = float(gpa)
+#         if not 0 <= gpa_float <= 5:  # Allow for weighted GPAs
+#             raise HTTPException(status_code=400, detail="GPA must be between 0 and 5")
+#     except ValueError:
+#         raise HTTPException(status_code=400, detail="Invalid GPA format")
 
-# Limit string lengths to prevent abuse
-    if len(str(interests)) > 2000 or len(str(activities)) > 2000:
-        raise HTTPException(status_code=400, detail="Input too long")
+# # Limit string lengths to prevent abuse
+#     if len(str(interests)) > 2000 or len(str(activities)) > 2000:
+#         raise HTTPException(status_code=400, detail="Input too long")
     # 1. Get Current Date & Logic
     now = datetime.now()
     current_date_str = now.strftime("%B %Y")
@@ -220,6 +264,7 @@ async def generate_roadmap(request: Request, current_user = Depends(get_current_
       
       
 @app.post("/essay")
+@limiter.limit("3/minute")
 async def grade_essay(request: Request, current_user = Depends(get_current_user)):
     data = await request.json()
     grade = data.get("grade")
