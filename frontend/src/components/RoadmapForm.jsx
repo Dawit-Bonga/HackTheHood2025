@@ -5,6 +5,7 @@ import Card from './ui/Card';
 import { Input, Textarea, Select } from './ui/Input';
 
 function RoadmapForm({ setRoadmap, setLoading }) {
+  const [currentStep, setCurrentStep] = useState(0);
   const [gpa, setGpa] = useState('');
   const [grade, setGrade] = useState('');
   const [interests, setInterests] = useState('');
@@ -18,8 +19,74 @@ function RoadmapForm({ setRoadmap, setLoading }) {
   const [retryCount, setRetryCount] = useState(0);
   const { getToken } = useAuth();
 
+  const steps = [
+    {
+      title: "Grade Level",
+      description: "Let's start with the basics",
+      fields: ['grade']
+    },
+    {
+      title: "Academic Performance",
+      description: "Tell us about your GPA and courses",
+      fields: ['gpa', 'classes']
+    },
+    {
+      title: "Interests & Goals",
+      description: "What are you passionate about?",
+      fields: ['interests']
+    },
+    {
+      title: "Activities",
+      description: "Share your extracurriculars",
+      fields: ['activities']
+    },
+    {
+      title: "Testing & Demographics",
+      description: "Help us understand your background",
+      fields: ['testing', 'demographic']
+    },
+    {
+      title: "College Preferences",
+      description: "What are you looking for in a college?",
+      fields: ['collegeGoals', 'location']
+    }
+  ];
+
+  const validateStep = () => {
+    const currentFields = steps[currentStep].fields;
+    const fieldValues = { grade, gpa, classes, interests, activities, testing, demographic, collegeGoals, location };
+    
+    for (const field of currentFields) {
+      const value = fieldValues[field];
+      // Skip optional fields (demographic)
+      if (field === 'demographic') continue;
+      
+      if (!value || value.trim() === '') {
+        return false;
+      }
+    }
+    return true;
+  };
+
+  const handleNext = () => {
+    if (validateStep()) {
+      setCurrentStep(prev => Math.min(prev + 1, steps.length - 1));
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  };
+
+  const handlePrevious = () => {
+    setCurrentStep(prev => Math.max(prev - 1, 0));
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
+    if (!validateStep()) {
+      return;
+    }
+
     setLoading(true);
     setError('');
     
@@ -75,6 +142,129 @@ function RoadmapForm({ setRoadmap, setLoading }) {
     handleSubmit(new Event('submit'));
   };
 
+  const renderStepContent = () => {
+    switch(currentStep) {
+      case 0:
+        return (
+          <Select
+            label="Grade Level"
+            value={grade}
+            onChange={(e) => setGrade(e.target.value)}
+            required
+            helperText="Your current academic year"
+          >
+            <option value="">Select your grade</option>
+            <option value="9">9th Grade</option>
+            <option value="10">10th Grade</option>
+            <option value="11">11th Grade</option>
+            <option value="12">12th Grade</option>
+            <option value="Community college">Community College</option>
+            <option value="other">Out of school, looking to get back in</option>
+          </Select>
+        );
+      
+      case 1:
+        return (
+          <>
+            <Input
+              label="GPA"
+              type="number"
+              value={gpa}
+              onChange={(e) => setGpa(e.target.value)}
+              step="0.01"
+              min="0"
+              max="4"
+              placeholder="e.g., 3.5"
+              helperText="Your current grade point average (0.0-4.0 scale)"
+              required
+            />
+            <Textarea
+              label="Course Rigor"
+              value={classes}
+              onChange={(e) => setClasses(e.target.value)}
+              placeholder="e.g., I have taken 7/11 AP classes, We have no AP or Honors Classes. Also feel free to drop your upcoming schedule"
+              helperText="Describe the difficulty of your classes and any advanced courses"
+              rows={4}
+              required
+            />
+          </>
+        );
+      
+      case 2:
+        return (
+          <Textarea
+            label="Interests & Goals"
+            value={interests}
+            onChange={(e) => setInterests(e.target.value)}
+            placeholder="e.g., computer science, medicine, social justice"
+            helperText="What are you passionate about? What do you want to study?"
+            rows={4}
+            required
+          />
+        );
+      
+      case 3:
+        return (
+          <Textarea
+            label="Activities & Extracurriculars"
+            value={activities}
+            onChange={(e) => setActivities(e.target.value)}
+            placeholder="e.g., debate, HackClub, Research - please try to be specific"
+            helperText="List your clubs, sports, volunteer work, jobs, etc."
+            rows={4}
+            required
+          />
+        );
+      
+      case 4:
+        return (
+          <>
+            <Textarea
+              label="SAT/Testing"
+              value={testing}
+              onChange={(e) => setTesting(e.target.value)}
+              placeholder="e.g., 1330 SAT, haven't taken the SAT yet, plan on taking it soon aiming for..."
+              helperText="Current scores or testing plans (SAT, ACT, AP exams, etc.)"
+              rows={3}
+            />
+            <Textarea
+              label="Demographic Information"
+              value={demographic}
+              onChange={(e) => setDemographic(e.target.value)}
+              placeholder="e.g., first-generation college student, low-income, rural area, underrepresented minority"
+              helperText="Optional: Help us tailor advice to your unique circumstances"
+              rows={3}
+            />
+          </>
+        );
+      
+      case 5:
+        return (
+          <>
+            <Textarea
+              label="College Goals"
+              value={collegeGoals}
+              onChange={(e) => setCollegeGoals(e.target.value)}
+              placeholder="e.g., Ivy League, state schools, specific universities, community college transfer, gap year plans"
+              helperText="What type of colleges are you interested in?"
+              rows={3}
+            />
+            <Textarea
+              label="Location Preferences"
+              value={location}
+              onChange={(e) => setLocation(e.target.value)}
+              placeholder="e.g., want to stay close to home in California, open to East Coast, prefer urban areas, must be near family"
+              helperText="Geographic preferences or constraints for college location"
+              rows={3}
+            />
+          </>
+        );
+      
+      default:
+        return null;
+    }
+  };
+
   return (
     <div className="max-w-3xl mx-auto">
       {error && (
@@ -111,123 +301,104 @@ function RoadmapForm({ setRoadmap, setLoading }) {
       )}
       
       <Card variant="elevated" padding="lg">
+        {/* Progress Bar */}
+        <div className="mb-8">
+          <div className="flex items-center justify-between mb-2">
+            <span className="text-sm font-medium text-[var(--color-text-secondary)]">
+              Step {currentStep + 1} of {steps.length}
+            </span>
+            <span className="text-sm font-medium text-[var(--color-text-secondary)]">
+              {Math.round(((currentStep + 1) / steps.length) * 100)}% Complete
+            </span>
+          </div>
+          <div className="w-full h-2 bg-gray-200 rounded-full overflow-hidden">
+            <div 
+              className="h-full bg-[var(--color-accent)] transition-all duration-300 ease-in-out rounded-full"
+              style={{ width: `${((currentStep + 1) / steps.length) * 100}%` }}
+            />
+          </div>
+        </div>
+
+        {/* Step Header */}
         <div className="mb-8">
           <h2 className="text-2xl font-bold text-[var(--color-text-primary)] mb-2">
-            Generate Your College Roadmap
+            {steps[currentStep].title}
           </h2>
           <p className="text-[var(--color-text-secondary)]">
-            Share your information to receive a personalized college preparation plan
+            {steps[currentStep].description}
           </p>
         </div>
 
+        {/* Form */}
         <form onSubmit={handleSubmit} className="space-y-6">
-          <Select
-            label="Grade Level"
-            value={grade}
-            onChange={(e) => setGrade(e.target.value)}
-            required
-            helperText="Your current academic year"
-          >
-            <option value="">Select your grade</option>
-            <option value="9">9th Grade</option>
-            <option value="10">10th Grade</option>
-            <option value="11">11th Grade</option>
-            <option value="12">12th Grade</option>
-            <option value="Community college">Community College</option>
-            <option value="other">Out of school, looking to get back in</option>
-          </Select>
+          <div className="min-h-[200px]">
+            {renderStepContent()}
+          </div>
 
-          <Input
-            label="GPA"
-            type="number"
-            value={gpa}
-            onChange={(e) => setGpa(e.target.value)}
-            step="0.01"
-            min="0"
-            max="4"
-            placeholder="e.g., 3.5"
-            helperText="Your current grade point average (0.0-4.0 scale)"
-            required
-          />
+          {/* Navigation Buttons */}
+          <div className="pt-4 flex gap-3">
+            {currentStep > 0 && (
+              <Button
+                type="button"
+                variant="outline"
+                size="lg"
+                onClick={handlePrevious}
+                className="flex-1"
+              >
+                <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                </svg>
+                Previous
+              </Button>
+            )}
+            
+            {currentStep < steps.length - 1 ? (
+              <Button
+                type="button"
+                variant="primary"
+                size="lg"
+                onClick={handleNext}
+                disabled={!validateStep()}
+                className="flex-1"
+              >
+                Next
+                <svg className="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                </svg>
+              </Button>
+            ) : (
+              <Button
+                type="submit"
+                variant="primary"
+                size="lg"
+                disabled={!validateStep()}
+                className="flex-1"
+              >
+                Generate My Roadmap
+                <svg className="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                </svg>
+              </Button>
+            )}
+          </div>
 
-          <Textarea
-            label="Course Rigor"
-            value={classes}
-            onChange={(e) => setClasses(e.target.value)}
-            placeholder="e.g., I have taken 7/11 AP classes, We have no AP or Honors Classes. Also feel free to drop your upcoming schedule"
-            helperText="Describe the difficulty of your classes and any advanced courses"
-            rows={3}
-            required
-          />
-
-          <Textarea
-            label="Interests & Goals"
-            value={interests}
-            onChange={(e) => setInterests(e.target.value)}
-            placeholder="e.g., computer science, medicine, social justice"
-            helperText="What are you passionate about? What do you want to study?"
-            rows={3}
-            required
-          />
-
-          <Textarea
-            label="Activities & Extracurriculars"
-            value={activities}
-            onChange={(e) => setActivities(e.target.value)}
-            placeholder="e.g., debate, HackClub, Research - please try to be specific"
-            helperText="List your clubs, sports, volunteer work, jobs, etc."
-            rows={3}
-            required
-          />
-
-          <Textarea
-            label="Demographic Information"
-            value={demographic}
-            onChange={(e) => setDemographic(e.target.value)}
-            placeholder="e.g., first-generation college student, low-income, rural area, underrepresented minority"
-            helperText="Optional: Help us tailor advice to your unique circumstances"
-            rows={2}
-          />
-
-          <Textarea
-            label="SAT/Testing"
-            value={testing}
-            onChange={(e) => setTesting(e.target.value)}
-            placeholder="e.g., 1330 SAT, haven't taken the SAT yet, plan on taking it soon aiming for..."
-            helperText="Current scores or testing plans (SAT, ACT, AP exams, etc.)"
-            rows={2}
-          />
-
-          <Textarea
-            label="College Goals"
-            value={collegeGoals}
-            onChange={(e) => setCollegeGoals(e.target.value)}
-            placeholder="e.g., Ivy League, state schools, specific universities, community college transfer, gap year plans"
-            helperText="What type of colleges are you interested in?"
-            rows={3}
-          />
-
-        <Textarea
-          label="Location Preferences"
-          value={location}
-          onChange={(e) => setLocation(e.target.value)}
-          placeholder="e.g., want to stay close to home in California, open to East Coast, prefer urban areas, must be near family"
-          helperText="Geographic preferences or constraints for college location"
-          rows={2}
-        />
-
-          <div className="pt-4">
-            <Button
-              type="submit"
-              variant="primary"
-              size="lg"
-              fullWidth
-            >
-              Generate My Roadmap
-              <svg className="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
-              </svg>
-            </Button>
+          {/* Step Indicators */}
+          <div className="flex justify-center gap-2 pt-4">
+            {steps.map((_, index) => (
+              <button
+                key={index}
+                type="button"
+                onClick={() => setCurrentStep(index)}
+                className={`w-2.5 h-2.5 rounded-full transition-all duration-200 ${
+                  index === currentStep 
+                    ? 'bg-[var(--color-accent)] w-8' 
+                    : index < currentStep
+                    ? 'bg-[var(--color-accent)] opacity-50'
+                    : 'bg-gray-300'
+                }`}
+                aria-label={`Go to step ${index + 1}`}
+              />
+            ))}
           </div>
         </form>
       </Card>
