@@ -38,6 +38,12 @@ app.add_middleware(
 # Verify Supabase JWT token
 async def get_current_user(credentials: HTTPAuthorizationCredentials = Depends(security)):
     token = credentials.credentials
+    
+    # Dev mode bypass (optional - for local testing)
+    if os.getenv('DEV_MODE') == 'true' and token == 'dev-token-bypass':
+        from types import SimpleNamespace
+        return SimpleNamespace(id='dev-user-123', email='dev@test.com')
+    
     try:
         user = supabase.auth.get_user(token)
         return user.user
