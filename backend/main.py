@@ -37,6 +37,7 @@ app.add_middleware(
         "http://localhost:5175",
         "http://localhost:5176",
         "http://localhost:5177",
+        "http://localhost:5179",
         "https://hack-the-hood2025.vercel.app"],
     allow_credentials=True,
     allow_methods=["*"],

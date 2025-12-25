@@ -12,6 +12,9 @@ import Scholarship from './components/Scholarship';
 import EssayPage from './components/Essay';
 import Login from './components/Login';
 import ErrorBoundary from './components/ErrorBoundary';
+import Dashboard from './components/Dashboard';
+import RoadmapDetail from './components/RoadmapDetail';
+import EssayDetail from './components/EssayDetail';
 import './App.css';
 
 // Protected Route component
@@ -49,9 +52,16 @@ function App() {
                 <Route path="/scholarship" element={<Scholarship />} />
                 
                 {/* Protected routes */}
+
                 <Route path="/basicInfo" element={
                   <ProtectedRoute>
                     <Basicinfo />
+                  </ProtectedRoute>
+                } />
+
+                  <Route path="/dashboard" element={
+                  <ProtectedRoute>
+                    <Dashboard />
                   </ProtectedRoute>
                 } />
                 <Route path="/roadmap" element={
@@ -59,13 +69,21 @@ function App() {
                     <Roadmap />
                   </ProtectedRoute>
                 } />
-                {/* <Route path="/roadmap" element={<Roadmap />} /> */}
+                <Route path="/roadmap/:id" element={
+                  <ProtectedRoute>
+                    <RoadmapDetail />
+                  </ProtectedRoute>
+                } />
                 <Route path="/essay" element={
                   <ProtectedRoute>
                     <EssayPage />
                   </ProtectedRoute>
                 } />
-                {/* <Route path="/essay" element={<EssayPage />} /> */}
+                <Route path="/essay/:id" element={
+                  <ProtectedRoute>
+                    <EssayDetail />
+                  </ProtectedRoute>
+                } />
               </Routes>
             </main>
             <Footer />
