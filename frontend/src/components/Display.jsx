@@ -232,7 +232,8 @@ const roadmapData = useMemo(() => {
       <div className="p-4 bg-[var(--color-primary-light)] rounded-lg flex items-start gap-3 border border-[var(--color-primary)]/20">
         <div className="text-sm text-[var(--color-primary-dark)]">
           <strong className="font-semibold block mb-1">💡 Pro Tip</strong> 
-          Save this roadmap! Since we generated a long-term plan, check back every semester to stay on track.
+          Roadmaps automatically get saved to your profile. Check your dashboard to come back to this roadmap in future dates!
+          {/* Save this roadmap! Since we generated a long-term plan, check back every semester to stay on track. */}
         </div>
       </div>
       
