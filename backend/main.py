@@ -1,7 +1,7 @@
 from fastapi import FastAPI, Request, Depends, HTTPException, status
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
-from openai import OpenAI
+from groq import Groq
 import os
 from dotenv import load_dotenv
 from supabase import create_client, Client
@@ -12,8 +12,8 @@ from slowapi.util import get_remote_address
 from slowapi.errors import RateLimitExceeded
 load_dotenv()
 
-client = OpenAI(
-    api_key=os.environ.get("OPEN_AI_KEY")
+client = Groq(
+    api_key=os.environ.get("GROQ_API_KEY")
 )
 
 # Supabase setup
@@ -220,7 +220,7 @@ async def generate_roadmap(request: Request, current_user = Depends(get_current_
                     "content": prompt,
                 }
             ],
-            model="gpt-4.1-mini",
+            model="llama-3.3-70b-versatile",
             temperature=0.7,
             max_tokens=4000, 
             response_format={"type": "json_object"}
@@ -258,7 +258,7 @@ async def generate_roadmap(request: Request, current_user = Depends(get_current_
             return {"roadmap": roadmap_json, "warning": "Roadmap generated but not saved"}
             
     except Exception as e:
-        print(f"OpenAI API Error: {e}")
+        print(f"Groq API Error: {e}")
         raise HTTPException(
             status_code=500, 
             detail="AI service temporarily unavailable."
@@ -372,7 +372,7 @@ Output valid JSON:
                 {"role": "system", "content": system_instruction},
                 {"role": "user", "content": user_content}
             ],
-            model="gpt-4.1-mini",
+            model="llama-3.3-70b-versatile",
             temperature=0.4, # Keep it low to enforce strict rubric
             max_tokens=4000,
             response_format={"type": "json_object"}
@@ -403,7 +403,7 @@ Output valid JSON:
             return {"feedback": feedback_json, "warning": "Feedback generated but not saved"}
             
     except Exception as e:
-        print(f"OpenAI API Error: {e}")
+        print(f"Groq API Error: {e}")
         raise HTTPException(
             status_code=500, 
             detail="AI service temporarily unavailable."
